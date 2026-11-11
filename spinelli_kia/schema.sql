@@ -1,4 +1,4 @@
--- Spinelli Kia sales system - database schema (SQLite)
+-- Spinelli Kia sales system - database schema (SQLite) - Prototype 2
 -- One table per class in the class diagram. Subclasses share the parent's key.
 PRAGMA foreign_keys = ON;
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS booking (
     receptionist_id     TEXT REFERENCES receptionist(person_id),        -- bookedBy (0..1)
     scheduled_date_time TEXT,
     duration_minutes    INTEGER,
-    status              TEXT CHECK (status IN ('Booked','Confirmed','Rescheduled','Cancelled')),
+    status              TEXT CHECK (status IN ('Booked','Confirmed','Rescheduled','Cancelled','Completed')),
     created_date        TEXT,
     booking_type        TEXT NOT NULL CHECK (booking_type IN ('SalesAppointment','TestDrive'))
 );
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS message (
     title               TEXT,
     content             TEXT NOT NULL,
     sent_date_time      TEXT,
-    status              TEXT CHECK (status IN ('Sent','Delivered','Read','Failed')),
+    status              TEXT CHECK (status IN ('Composed','Scheduled','Sent','Delivered','Read','Failed','Cancelled')),
     channel             TEXT CHECK (channel IN ('Email','SMS','In-app')),
     sender_role         TEXT CHECK (sender_role IN ('Customer','Receptionist','System')),
     message_type        TEXT CHECK (message_type IN ('Message','Notification','Confirmation','Reminder')),
@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS message (
 CREATE TABLE IF NOT EXISTS automation_rule (
     rule_id   TEXT PRIMARY KEY,
     admin_id  TEXT NOT NULL REFERENCES admin(person_id),                  -- manages
+    sales_manager_id TEXT REFERENCES sales_manager(person_id),            -- receives the reports
     name      TEXT,
     frequency TEXT CHECK (frequency IN ('Daily','Weekly','Monthly')),
     filters   TEXT,
@@ -138,5 +139,6 @@ CREATE TABLE IF NOT EXISTS report (
     start_date       TEXT,
     end_date         TEXT,
     generated_date   TEXT,
-    delivery_status  TEXT CHECK (delivery_status IN ('Sent','Failed'))
+    delivery_status  TEXT CHECK (delivery_status IN ('Sent','Failed')),
+    content          TEXT
 );

@@ -53,7 +53,6 @@ Branch workflow: one branch per change, merged into `main` by pull request.
 | Prototype 1 – classes, attributes, database | Submitted | `main` history |
 | Prototype 2 – all methods implemented | Done, due Nov 22 | Release / tag `Prototype_2` |
 | Milestone 5 – implementation class diagram, method contracts and specifications | Done, due Nov 22 | Course documents |
-| Milestone 6 – HCI design (UC1, UC4, UC6) | In progress | Course documents |
 | Final prototype | Next | `main` |
 
 `docs/` holds the Milestone 3 class diagram and CRC cards used for Prototype 1. The current design is

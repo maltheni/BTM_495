@@ -34,5 +34,27 @@ Requires Python 3.10+ (no extra packages).
 
 Names use Python's snake_case: `personID` → `person_id`, `addStatusUpdate()` → `add_status_update()`.
 
-## Team
-Team 23 – see the Milestone 1–5 documents. Branch workflow: one branch per use case, merge into `main` by pull request.
+## Team 23
+| Member | Use case |
+|---|---|
+| Vincent Mousseau | UC1 Create and manage profiles |
+| Ludovic Missihoun | UC2 Scheduling system |
+| Sameer Grover | UC3 Automation and reporting |
+| Aiden Cheong | UC4 Booking system for test driving |
+| Pierre El-Gemayel | UC5 Tracking for the customer |
+| Mohammed Altheni | UC6 Messaging system |
+| Abd-Al Karim Taylouni | UC7 Customer service system |
+
+Branch workflow: one branch per change, merged into `main` by pull request.
+
+## Project progress
+| Deliverable | Status | Where |
+|---|---|---|
+| Prototype 1 – classes, attributes, database | Submitted | `main` history |
+| Prototype 2 – all methods implemented | Done, due Nov 22 | Release / tag `Prototype_2` |
+| Milestone 5 – implementation class diagram, method contracts and specifications | Done, due Nov 22 | Course documents |
+| Milestone 6 – HCI design (UC1, UC4, UC6) | In progress | Course documents |
+| Final prototype | Next | `main` |
+
+`docs/` holds the Milestone 3 class diagram and CRC cards used for Prototype 1. The current design is
+the Milestone 5 implementation class diagram, which `models.py` follows.

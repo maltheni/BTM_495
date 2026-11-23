@@ -16,6 +16,8 @@ Then open **http://127.0.0.1:8000** in a browser. The demo data is created autom
 first time. To start again from the original data, use **Switches and reset → Reset demo data**
 in the dark bar at the bottom of every page (do this before the presentation).
 
+Online copy (same app, hosted on PythonAnywhere): **https://maltheni.pythonanywhere.com**
+
 | Who | How to sign in |
 |---|---|
 | Customer | Sign In (top right): `marie.tremblay@mail.com`, password `spinelli` (every demo customer uses `spinelli`) |

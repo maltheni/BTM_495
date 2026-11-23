@@ -4,12 +4,15 @@ The problem-domain classes (models.py) and the data layer (store.py, schema.sql)
 as designed in Milestones 5 and 7, so Django's ORM and its database are not used:
 Django only provides the web pages (HCI layer). Sessions are kept in signed cookies.
 """
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "demo-only-key-not-for-production-btm495-team23"
-DEBUG = True
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
+# On the laptop DEBUG is on (detailed error pages). The hosted copy sets SPINELLI_DEBUG=0 in its WSGI file.
+DEBUG = os.environ.get("SPINELLI_DEBUG", "1") == "1"
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver", ".pythonanywhere.com"]
+CSRF_TRUSTED_ORIGINS = ["https://maltheni.pythonanywhere.com"]
 
 INSTALLED_APPS = ["django.contrib.staticfiles", "portal"]
 MIDDLEWARE = [

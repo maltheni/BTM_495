@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Test Drive Requests" %}{% endblock %}
+{% block content %}
+<h1>{% t "Test Drive Requests" %}</h1><div class="sub">{% t "Review each request, check the vehicle and the license, then confirm or deny it." %}</div>
+<div class="chips">{% for k, n in counts.items %}<a class="chip{% if k == tab %} on{% endif %}" href="?show={{ k }}">{% t k %} ({{ n }})</a>{% endfor %}</div>
+<div class="card"><table><tr><th>{% t "Request" %}</th><th>{% t "Customer" %}</th><th>{% t "Vehicle" %}</th><th>{% t "Requested time" %}</th><th>{% t "Received" %}</th><th>{% t "Status" %}</th><th></th></tr>
+{% for t in rows %}<tr><td><b>{{ t.booking_id }}</b></td><td>{{ t.customer.name }}</td><td>{{ t.vehicle.year }} {{ t.vehicle.make }} {{ t.vehicle.model }}</td>
+<td>{{ t.scheduled_date_time|when }}</td><td>{{ t.created_date|day }}</td><td>{% if t.status == "Booked" %}{{ "Pending"|pill }}{% elif t.status == "Cancelled" %}{{ "Denied"|pill }}{% else %}{{ t.status|pill }}{% endif %}</td>
+<td><a class="btn sec sm" href="/staff/requests/{{ t.booking_id }}/">{% t "Open" %}</a></td></tr>
+{% empty %}<tr><td colspan="7" class="muted">{% t "No requests in this list." %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

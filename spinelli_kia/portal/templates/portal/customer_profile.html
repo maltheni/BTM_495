@@ -1,0 +1,8 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ c.name }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/staff/customers/">{% t "Customers" %}</a> / {{ c.name }}</div>
+<div class="split"><div><h1>{{ c.name }}</h1><div class="sub">{% t "Customer" %} {{ c.person_id }} · {% t "customer since" %} {{ c.created_date|day }}</div></div>
+<div class="btns"><a class="btn" href="/staff/customers/{{ c.person_id }}/edit/">{% t "Edit profile" %}</a><a class="btn sec" href="/staff/schedule/?customer={{ c.person_id }}">{% t "Book appointment" %}</a><a class="btn sec" href="/staff/customers/">{% t "Back to search" %}</a></div></div>
+{% include "portal/_profile_body.html" %}
+{% endblock %}

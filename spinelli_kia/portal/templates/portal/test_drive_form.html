@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Book a Test Drive" %}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/">{% t "Home" %}</a> / {% t "Book a Test Drive" %}</div>
+<h1>{% t "Request a test drive" %}</h1><div class="sub">{% t "No account needed. The reception team reviews your request and confirms it by email and SMS." %}</div>
+{% if n_errors %}<div class="ban bad"><b>{% t "Please fix the highlighted fields" %} ({{ n_errors }})</b>{% t "Nothing has been sent yet." %}</div>{% endif %}
+{% if crm_down %}<div class="ban warn"><b>{% t "Our booking service is not responding right now" %}</b>{% t "Your request was not recorded. Your information is kept below: please try again in a few minutes, or call us at (514) 555-0100." %}</div>{% endif %}
+<form method="post" novalidate>{% csrf_token %}
+<div class="card grey"><div class="split"><div><div class="lbl">{% t "Vehicle" %}</div>
+{% if v %}<b>{{ name }}</b> <span class="muted">· {% t "Stock" %} #{{ v.stock_number }} · {{ info.price|money }}</span><input type="hidden" name="vehicle" value="{{ v.stock_number }}">
+{% else %}<div class="f{% if errors.vehicle %} err{% endif %}" style="min-width:320px"><select name="vehicle"><option value="">{% t "Choose a vehicle" %}</option>{% for c in cars %}<option value="{{ c.stock_number }}">{{ c.year }} {{ c.make }} {{ c.model }}</option>{% endfor %}</select>{% if errors.vehicle %}<div class="em">{{ errors.vehicle }}</div>{% endif %}</div>{% endif %}
+</div>{% if v %}<a class="btn sec sm" href="/test-drive/">{% t "Change vehicle" %}</a>{% endif %}</div></div>
+<div class="grp">1. {% t "Your details" %}</div>
+<div class="row">{% field "Full name" "name" placeholder="First and last name" %}{% field "Email" "email" "email" placeholder="name@example.com" %}{% field "Phone" "phone" "tel" placeholder="(514) 555-0177" %}</div>
+<div class="grp">2. {% t "Date and time" %}</div>
+<div class="row"><div class="f{% if errors.date %} err{% endif %}"><label for="f_date">{% t "Preferred date" %}</label><input id="f_date" type="date" name="date" value="{{ d.date }}" min="{{ tomorrow }}">{% if errors.date %}<div class="em">{{ errors.date }}</div>{% endif %}</div>
+<div class="f{% if errors.window %} err{% endif %}"><label for="f_window">{% t "Preferred time window" %}</label><select id="f_window" name="window"><option value="">{% t "Select a time window" %}</option>{% for k, w in windows.items %}<option value="{{ k }}"{% if d.window == k %} selected{% endif %}>{% t k %} ({{ w.1 }})</option>{% endfor %}</select>{% if errors.window %}<div class="em">{{ errors.window }}</div>{% endif %}</div></div>
+<div class="grp">3. {% t "Driver's license and consent" %}</div>
+<div class="row">{% field "Driver's license number" "license" placeholder="T6524-180590-07" hint="Quebec licence: 1 letter and 12 digits. It is checked at the dealership." %}<div></div></div>
+<label class="chk"><input type="checkbox" name="consent"{% if d.consent %} checked{% endif %}><span>{% t "I agree to receive the confirmation and reminders by email and SMS." %}</span></label>
+<div class="btns"><button class="btn">{% t "Submit Request" %}</button><a class="btn sec" href="{% if v %}/vehicles/{{ v.stock_number }}/{% else %}/vehicles/{% endif %}">{% t "Cancel" %}</a></div>
+</form>
+{% endblock %}

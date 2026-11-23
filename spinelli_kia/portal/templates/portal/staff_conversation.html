@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ conv.subject }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/staff/messages/">{% t "Messages" %}</a> / {{ conv.subject }}</div>
+<h1>{{ conv.subject }} {{ conv.status|pill }}</h1><div class="sub"><a href="/staff/customers/{{ conv.customer.person_id }}/">{{ conv.customer.name }}</a> · {% t "customer since" %} {{ conv.customer.created_date|day }} · {% if conv.customer.messaging_consent %}{% t "consent: email and SMS" %}{% else %}{% t "no email or SMS consent" %}{% endif %}{% if conv.sales_manager %} · {% t "escalated to" %} {{ conv.sales_manager.name }}{% endif %}</div>
+{% if error %}<div class="ban bad"><b>{% t "Not sent" %}</b>{{ error }}</div>{% endif %}
+{% include "portal/_thread.html" %}
+{% if conv.status != "Closed" %}
+<div class="cols"><form method="post" class="card grey">{% csrf_token %}<div class="f{% if error %} err{% endif %}"><label>{% t "Reply" %}</label><textarea name="content" placeholder="{% t 'Write your reply' %}">{{ reply }}</textarea></div>
+<div class="btns"><button class="btn" name="action" value="reply">{% t "Send Reply" %}</button><a class="btn sec" href="/staff/messages/">{% t "Back to messages" %}</a></div></form>
+{% if conv.status == "Open" %}<form method="post" class="card">{% csrf_token %}<h2>{% t "Cannot answer?" %}</h2><div class="muted" style="margin-bottom:8px">{% t "Pass the conversation to a sales manager. The customer is told." %}</div>
+<select name="manager">{% for m in managers %}<option value="{{ m.person_id }}"{% if m == conv.customer.assigned_to %} selected{% endif %}>{{ m.name }}</option>{% endfor %}</select>
+<div class="btns"><button class="btn red" name="action" value="escalate">{% t "Escalate to Sales Manager" %}</button></div></form>{% endif %}</div>
+{% else %}<div class="ban info"><b>{% t "Conversation closed" %}</b>{% t "The customer ended this conversation." %}</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Request received" %}{% endblock %}
+{% block content %}
+<div class="ban ok"><b>{% t "Request received" %}</b>{% t "Thank you. The reception team will review your request and confirm it by email and SMS." %}</div>
+<h1>{% t "Test drive request" %} {{ t.booking_id }} {{ "Pending review"|pill }}</h1>
+<div class="sub">{% t "Your test drive is not confirmed yet. You will receive a confirmation once the reception team has checked the vehicle and your license." %}</div>
+<div class="card" style="max-width:640px"><div class="kv">
+<b>{% t "Vehicle" %}</b><span>{{ name }} ({% t "Stock" %} #{{ t.vehicle.stock_number }})</span>
+<b>{% t "Requested date" %}</b><span>{{ t.scheduled_date_time|day }}</span><b>{% t "Time window" %}</b><span>{{ window }}</span>
+<b>{% t "Name" %}</b><span>{{ t.customer.name }}</span><b>{% t "Email" %}</b><span>{{ t.customer.email }}</span><b>{% t "Phone" %}</b><span>{{ t.customer.phone_number }}</span>
+<b>{% t "Reference" %}</b><span>{{ t.booking_id }}</span></div></div>
+<div class="btns"><a class="btn" href="/track/">{% t "Track my Purchase" %}</a><a class="btn sec" href="/vehicles/">{% t "Back to Vehicles" %}</a></div>
+{% endblock %}

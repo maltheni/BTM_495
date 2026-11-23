@@ -1,0 +1,21 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ conv.subject }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/messages/">{% t "Messages" %}</a> / {{ conv.subject }}</div>
+{% if just_sent %}<div class="ban ok"><b>{% t "Message sent" %}</b>{% t "The reception team was notified. You will get an email when they reply." %}</div>{% endif %}
+<h1>{{ conv.subject }} {{ conv.status|pill }}</h1><div class="sub">{% t "Started" %} {{ conv.start_date|day }}{% if conv.receptionist %} · {% t "Handled by" %} {{ conv.receptionist.name }}{% endif %}</div>
+{% if error %}<div class="ban bad"><b>{% t "Not sent" %}</b>{{ error }}</div>{% endif %}
+<div class="card">{% for m in msgs %}
+{% if m.sender_role == "System" and m.message_type == "Notification" and "Escalated" in m.content %}<div class="msg sys">{% t "Your question was passed to a sales manager, who will contact you." %}</div>
+{% else %}<div class="msg {% if m.sender_role == 'Customer' %}me{% elif m.sender_role == 'System' %}sys{% else %}them{% endif %}"><small>{% if m.sender_role == "Customer" %}{% t "You" %}{% elif m.sender_role == "System" %}Spinelli Kia · {{ m.title }}{% else %}{{ conv.receptionist.name }}{% endif %} · {{ m.sent_date_time|when }} · {{ m.status }}</small>{{ m.content }}</div>{% endif %}
+{% endfor %}</div>
+{% if conv.status == "Closed" %}
+<div class="ban info"><b>{% t "This conversation is closed" %}</b>{% t "Need anything else? Start a new message." %}</div><a class="btn" href="/messages/new/">{% t "New Message" %}</a>
+{% elif is_system %}
+<div class="muted" style="margin-bottom:10px">{% t "These are automatic notices from Spinelli Kia. To ask a question, start a new message." %}</div><a class="btn sec" href="/messages/new/">{% t "New Message" %}</a>
+{% else %}
+<form method="post" class="card grey">{% csrf_token %}<div class="f{% if error %} err{% endif %}"><label>{% t "Not answered yet? Write a follow-up" %}</label><textarea name="content" placeholder="{% t 'Write your message' %}">{{ follow }}</textarea></div>
+<div class="btns"><button class="btn" name="action" value="send">{% t "Send" %}</button>
+<button class="btn sec" name="action" value="close" formnovalidate>{% t "My question is answered: end conversation" %}</button></div></form>
+{% endif %}
+{% endblock %}

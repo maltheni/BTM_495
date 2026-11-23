@@ -1,0 +1,50 @@
+{% load static portal_tags %}<!doctype html>
+<html lang="{% if lang == 'FR' %}fr{% else %}en{% endif %}">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Spinelli Kia{% endblock %} · Spinelli Kia</title>
+<link rel="stylesheet" href="{% static 'portal/style.css' %}">
+</head>
+<body>
+<div class="screen">
+{% if portal == "staff" %}
+  <div class="top staff">
+    <a class="logo" href="{{ home_url }}">SPINELLI KIA<span class="tag">STAFF</span><small>{{ staff_title }} · {{ me.name }}</small></a>
+    {% for label, url, key in menu %}
+      <a class="nav{% if key == active %} on{% endif %}" href="{{ url }}">{% t label %}{% if key == "messages" and badge %}<span class="badge">{{ badge }}</span>{% endif %}</a>
+    {% endfor %}
+    <span class="lang"><a href="/lang/EN/?next={{ request.path|urlencode }}" class="{% if lang != 'FR' %}on{% endif %}">EN</a><a href="/lang/FR/?next={{ request.path|urlencode }}" class="{% if lang == 'FR' %}on{% endif %}">FR</a></span>
+    <a class="navbtn" href="/staff/signout/">{% t "Sign Out" %}</a>
+  </div>
+{% elif portal == "plain" %}
+  <div class="top staff"><a class="logo" href="/staff/signin/">SPINELLI KIA<span class="tag">STAFF</span><small>Staff portal</small></a>
+    <span class="lang"><a href="/lang/EN/?next={{ request.path|urlencode }}" class="{% if lang != 'FR' %}on{% endif %}">EN</a><a href="/lang/FR/?next={{ request.path|urlencode }}" class="{% if lang == 'FR' %}on{% endif %}">FR</a></span>
+    <a class="navbtn" href="/">{% t "Customer website" %}</a></div>
+{% else %}
+  <div class="top">
+    <a class="logo" href="/">SPINELLI KIA<small>West Island</small></a>
+    <a class="nav{% if active == 'vehicles' %} on{% endif %}" href="/vehicles/">{% t "Vehicles" %}</a>
+    <a class="nav{% if active == 'testdrive' %} on{% endif %}" href="/test-drive/">{% t "Book a Test Drive" %}</a>
+    <a class="nav{% if active == 'messages' %} on{% endif %}" href="/messages/">{% t "Messages" %}{% if role == "customer" and badge %}<span class="badge">{{ badge }}</span>{% endif %}</a>
+    <a class="nav{% if active == 'track' %} on{% endif %}" href="/track/">{% t "Track my Purchase" %}</a>
+    <a class="nav{% if active == 'contact' %} on{% endif %}" href="/contact/">{% t "Contact Us" %}</a>
+    <span class="lang"><a href="/lang/EN/?next={{ request.path|urlencode }}" class="{% if lang != 'FR' %}on{% endif %}">EN</a><a href="/lang/FR/?next={{ request.path|urlencode }}" class="{% if lang == 'FR' %}on{% endif %}">FR</a></span>
+    {% if role == "customer" %}<a class="navbtn" href="/account/">{{ me.name }}</a>{% else %}<a class="navbtn" href="/signin/">{% t "Sign In" %}</a>{% endif %}
+  </div>
+{% endif %}
+{% if toast %}<a class="toast ban info" href="{{ toast.url }}"><b>{% t "New message from" %} {{ toast.who }}</b>{{ toast.subject }}</a>{% endif %}
+<div class="page">
+{% for kind, title, text in flashes %}<div class="ban {{ kind }}"><b>{{ title }}</b>{{ text }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</div>
+</div>
+<div class="demo">
+  <b>{% t "Prototype demo tools" %}</b>
+  <a href="/demo/">{% t "Notifications sent" %} ({{ outbox_count }})</a>
+  <span>CRM: {% if demo.crm_online %}online{% else %}<b>offline</b>{% endif %}</span>
+  <span>{% t "Reception inbox" %}: {% if demo.reception_active %}active{% else %}<b>inactive</b>{% endif %}</span>
+  <a href="/demo/">{% t "Switches and reset" %}</a>
+  <span class="right">{% if role and role != "customer" %}{% else %}<a href="/staff/signin/">{% t "Staff portal" %}</a>{% endif %}</span>
+</div>
+</body>
+</html>

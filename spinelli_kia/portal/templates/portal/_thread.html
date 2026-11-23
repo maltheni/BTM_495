@@ -1,0 +1,3 @@
+{% load portal_tags %}<div class="card">{% for m in msgs %}
+<div class="msg {% if m.sender_role == 'Receptionist' %}me{% elif m.sender_role == 'System' %}sys{% else %}them{% endif %}"><small>{% if m.sender_role == "Customer" %}{{ conv.customer.name }}{% elif m.sender_role == "System" %}{% t "System" %} · {{ m.title }}{% else %}{{ conv.receptionist.name }}{% endif %} · {{ m.sent_date_time|when }} · {{ m.status }}</small>{{ m.content }}</div>
+{% empty %}<div class="muted">{% t "No messages." %}</div>{% endfor %}</div>

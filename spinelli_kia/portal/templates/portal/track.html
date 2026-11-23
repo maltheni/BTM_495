@@ -1,0 +1,17 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Track my Purchase" %}{% endblock %}
+{% block content %}
+<h1>{% t "Track my Purchase" %}</h1><div class="sub">{{ c.name }} · {% t "Customer" %} {{ c.person_id }}{% if c.assigned_to %} · {% t "Your sales manager" %}: {{ c.assigned_to.name }}{% endif %}</div>
+{% if stage == "Unavailable" %}
+<div class="ban warn"><b>{% t "Your status is not available yet" %}</b>{% t "Your sales manager has not recorded a status for your file yet. Please check again later or write to us in Messages." %}</div>
+{% else %}
+<div class="card"><div class="lbl">{% t "Current status" %}</div><h2 style="margin:4px 0 2px">{% t stage %}</h2><div class="muted">{{ info|get:stage }}</div>
+<div class="stages">{% for s in stages %}<div class="{% if forloop.counter0 < idx %}done{% elif forloop.counter0 == idx %}now{% endif %}">{% t s %}</div>{% endfor %}</div></div>
+{% endif %}
+<div class="cols"><div class="card"><h2>{% t "History" %}</h2>
+{% if history %}<div class="timeline">{% for s in history %}<div class="step"><b>{% t s.stage %}</b> <span class="muted">· {{ s.updated_date|day }}</span><div>{{ s.note }}</div></div>{% endfor %}</div>
+{% else %}<div class="muted">{% t "No history yet." %}</div>{% endif %}</div>
+<div class="card"><h2>{% t "Your bookings" %}</h2>
+{% for b, lab in bookings %}<div style="margin-bottom:10px"><b>{% if b.vehicle %}{% t "Test drive" %}: {{ b.vehicle.model }}{% else %}{% t "Appointment" %}: {{ b.purpose }}{% endif %}</b><br><span class="muted">{{ b.scheduled_date_time|when }}</span> {{ lab|pill }}</div>
+{% empty %}<div class="muted">{% t "No upcoming bookings." %}</div>{% endfor %}</div></div>
+{% endblock %}

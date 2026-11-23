@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Sign In" %}{% endblock %}
+{% block content %}
+<div style="max-width:440px;margin:20px auto">
+<h1>{% t "Sign in to your account" %}</h1><div class="sub">{% t "Your account gives you Messages, Track my Purchase and Contact Us. Booking a test drive does not need an account." %}</div>
+{% if err %}<div class="ban bad"><b>{% t "You could not be signed in" %}</b>{{ err }}</div>{% endif %}
+<form method="post" class="card">{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
+<div class="f"><label>{% t "Email" %}</label><input type="email" name="email" value="{{ email }}" placeholder="name@example.com" autofocus></div>
+<div class="f"><label>{% t "Password" %}</label><input type="password" name="password"></div>
+<div class="btns"><button class="btn">{% t "Sign In" %}</button><a class="btn sec" href="/">{% t "Cancel" %}</a></div></form>
+<div class="ban info"><b>{% t "Prototype demo account" %}</b>marie.tremblay@mail.com · {% t "password" %}: spinelli<br><span class="muted">{% t "Every demo customer uses the password spinelli. The final system verifies the email address (Milestone 7, security)." %}</span></div>
+</div>
+{% endblock %}

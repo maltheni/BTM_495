@@ -1,0 +1,22 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% if mode == "edit" %}{% t "Edit profile" %}{% else %}{% t "New customer" %}{% endif %}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/staff/customers/">{% t "Customers" %}</a> / {% if mode == "edit" %}<a href="/staff/customers/{{ c.person_id }}/">{{ c.name }}</a> / {% t "Edit" %}{% else %}{% t "New customer" %}{% endif %}</div>
+<h1>{% if mode == "edit" %}{% t "Edit profile" %}: {{ c.name }}{% else %}{% t "New customer" %}{% endif %}</h1>
+<div class="sub">{% if mode == "edit" %}{% t "Change the details and save. The change is added to the interaction history." %}{% else %}{% t "No matching profile was found. Create the profile; the system warns you if it looks like a duplicate." %}{% endif %}</div>
+{% if n_errors %}<div class="ban bad"><b>{% t "Please fix the highlighted fields" %} ({{ n_errors }})</b>{% t "Nothing was saved." %}</div>{% endif %}
+{% if dup %}<div class="ban warn"><b>{% t "Possible duplicate" %}: {% t "this email or phone already belongs to" %} "{{ dup.name }}" ({{ dup.person_id }}).</b>{{ dup.email }} · {{ dup.phone_number }} · {% t "customer since" %} {{ dup.created_date|day }}
+<div class="btns"><a class="btn sm" href="/staff/customers/{{ dup.person_id }}/">{% t "Open existing profile" %}</a></div></div>{% endif %}
+<form method="post" novalidate class="card" style="max-width:860px">{% csrf_token %}
+<div class="grp">{% t "Contact details" %}</div>
+<div class="row">{% field "Full name" "name" %}{% field "Email" "email" "email" placeholder="name@example.com" %}{% field "Phone" "phone" "tel" placeholder="(514) 555-0177" %}</div>
+<div class="grp">{% t "Interest and preferences" %}</div>
+<div class="row">{% field "Vehicle interest" "interest" placeholder="For example: 2026 Kia EV6 Wind" %}
+{% if mode == "new" %}{% field "Lead source" "source" "select" options=SOURCES %}{% endif %}
+{% field "Preferred language" "language" "select" options=LANGS %}
+<div class="f{% if errors.manager %} err{% endif %}"><label>{% t "Sales manager" %}</label><select name="manager"><option value="">{% if mode == "new" %}{% t "Assign automatically" %}{% else %}-{% endif %}</option>{% for m in managers %}<option value="{{ m.person_id }}"{% if d.manager == m.person_id %} selected{% endif %}>{{ m.name }}</option>{% endfor %}</select></div></div>
+<label class="chk"><input type="checkbox" name="consent"{% if d.consent %} checked{% endif %}><span>{% t "The customer agrees to receive emails and SMS (messaging consent)" %}</span></label>
+{% if mode == "edit" %}<div class="grp">{% t "History" %}</div>{% field "Note for the history (optional)" "note" placeholder="For example: customer moved, new phone number" %}{% endif %}
+<div class="btns">{% if dup %}<button class="btn" name="create_anyway" value="1">{% t "Create anyway" %}</button>{% else %}<button class="btn">{% if mode == "edit" %}{% t "Save changes" %}{% else %}{% t "Create profile" %}{% endif %}</button>{% endif %}
+<a class="btn sec" href="{% if mode == 'edit' %}/staff/customers/{{ c.person_id }}/{% else %}/staff/customers/{% endif %}">{% t "Cancel" %}</a></div></form>
+{% endblock %}

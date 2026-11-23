@@ -1,0 +1,8 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Reports" %}{% endblock %}
+{% block content %}
+<h1>{% t "Reports" %}</h1><div class="sub">{% if admin %}{% t "Every report produced by the automation rules." %}{% else %}{% t "Reports emailed to you by the automation rules." %}{% endif %}</div>
+<div class="card"><table><tr><th>{% t "Report" %}</th><th>{% t "Period" %}</th><th>{% t "Generated" %}</th>{% if admin %}<th>{% t "Sent to" %}</th>{% endif %}<th>{% t "Delivery" %}</th><th>{% t "Content" %}</th></tr>
+{% for r in reps %}<tr><td><b>{{ r.report_type }}</b><div class="muted">{{ r.report_id }}</div></td><td>{{ r.start_date|day }} – {{ r.end_date|day }}</td><td>{{ r.generated_date|day }}</td>{% if admin %}<td>{{ r.sales_manager.name }}</td>{% endif %}<td>{{ r.delivery_status|pill }}</td><td>{{ r.content }}</td></tr>
+{% empty %}<tr><td colspan="6" class="muted">{% t "No reports yet." %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

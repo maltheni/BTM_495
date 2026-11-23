@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "New message" %}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/messages/">{% t "Messages" %}</a> / {% t "New message" %}</div>
+<h1>{% t "New message" %}</h1><div class="sub">{% t "The reception team usually answers within one business day. You will get an email when they reply." %}</div>
+{% if n_errors %}<div class="ban bad"><b>{% t "Please fix the highlighted fields" %} ({{ n_errors }})</b>{% t "Your message was not sent." %}</div>{% endif %}
+{% if failed %}<div class="ban bad"><b>{% t "Your message could not be delivered" %}</b>{% t "The reception team cannot be reached right now. Your text is kept below: try again later or call (514) 555-0100." %}</div>{% endif %}
+<form method="post" novalidate class="card" style="max-width:760px">{% csrf_token %}
+<div class="f"><label>{% t "To" %}</label><input type="text" value="{% t 'Reception team' %}" disabled></div>
+{% field "Subject" "subject" placeholder="For example: Sportage availability" %}
+{% field "Message" "content" "textarea" placeholder="Write your question" %}
+<div class="btns"><button class="btn">{% t "Send" %}</button><a class="btn sec" href="/messages/">{% t "Cancel" %}</a></div></form>
+{% endblock %}

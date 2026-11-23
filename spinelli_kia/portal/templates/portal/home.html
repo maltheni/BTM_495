@@ -1,0 +1,17 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Home" %}{% endblock %}
+{% block content %}
+<div class="hero"><h1>{% t "Find your next Kia in the West Island" %}</h1>
+<p>{% t "Browse our vehicles, book a test drive online in two minutes, and follow your purchase from home." %}</p>
+<a class="btn" href="/test-drive/">{% t "Book a Test Drive" %}</a> <a class="btn sec" href="/vehicles/">{% t "See all vehicles" %}</a></div>
+<h2>{% t "Featured vehicles" %}</h2>
+<div class="vgrid">{% for v in cars %}{% with info=cat|get:v.stock_number %}
+<div class="vcard">{% include "portal/_car.html" %}<div class="in"><b>{{ v.year }} {{ v.make }} {{ v.model }}</b><div class="muted">{{ info.body }} · {% t "Stock" %} #{{ v.stock_number }}</div>
+<div class="split" style="margin-top:8px"><span class="price">{{ info.price|money }}</span><a class="btn sm" href="/vehicles/{{ v.stock_number }}/">{% t "View details" %}</a></div></div></div>
+{% endwith %}{% endfor %}</div>
+<div class="row" style="margin-top:20px">
+<div class="card grey"><b>{% t "Have a question?" %}</b><div class="muted" style="margin:4px 0 8px">{% t "Write to our reception team from your account." %}</div><a href="/messages/">{% t "Messages" %} →</a></div>
+<div class="card grey"><b>{% t "Already bought or ordered?" %}</b><div class="muted" style="margin:4px 0 8px">{% t "See where your purchase is at any time." %}</div><a href="/track/">{% t "Track my Purchase" %} →</a></div>
+<div class="card grey"><b>{% t "Need help?" %}</b><div class="muted" style="margin:4px 0 8px">{% t "Send a service request and we will follow up." %}</div><a href="/contact/">{% t "Contact Us" %} →</a></div>
+</div>
+{% endblock %}

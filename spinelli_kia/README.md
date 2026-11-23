@@ -1,38 +1,58 @@
-# Spinelli Kia Sales System – Prototype 2 (BTM 495, Team 23)
+# Spinelli Kia Sales System – Final Prototype (BTM 495, Team 23)
 
-Second prototype: the problem-domain classes with **all their attributes and all their methods**,
-following the Milestone 5 implementation class diagram.
-
-## What changed since Prototype 1
-- `models.py` follows the **implementation class diagram** (Milestone 5):
-  - Person and Booking (abstract) are no longer classes: their attributes and methods are written
-    out in Admin, SalesManager, Receptionist, Customer, SalesAppointment and TestDrive.
-  - Associations are attributes that hold the related objects (e.g. `Customer.status_updates`,
-    `StatusUpdate.customer`) instead of ID strings.
-  - **All methods are implemented** (Prototype 1 had only the Messaging ones).
-    `reschedule()`, `confirm()`, `send()` and `complete()` follow their Milestone 5 method
-    specifications; the step numbers are in the code comments.
-- `schema.sql`: new status values (Booking: Completed; Message: Composed, Scheduled, Cancelled),
-  `report.content` and `automation_rule.sales_manager_id`.
-- `main.py`: a demo that walks through all seven use cases and saves the results in the database.
-- `test_methods.py`: 31 tests, at least one for every method, grouped by use case.
-
-## Files
-| File | Purpose |
-|---|---|
-| `models.py` | The 14 classes of the implementation class diagram, with attributes and methods |
-| `schema.sql` | Database tables (data management layer) |
-| `db.py` | Database service (SQLite). `init_db()` builds the tables from `schema.sql` |
-| `main.py` | Demo of UC1–UC7, then saves and reads back from the database |
-| `test_methods.py` | Unit tests for every method |
+A working web application for the seven use cases of the Spinelli Kia sales system, with
+the screens of Milestone 6, the classes and methods of Milestone 5, and the layers of the
+Milestone 7 deployment design.
 
 ## Run it
-Requires Python 3.10+ (no extra packages).
 
-    python main.py                          # demo of the seven use cases
-    python -m unittest test_methods -v      # run the tests
+Requires Python 3.10 or later.
 
-Names use Python's snake_case: `personID` → `person_id`, `addStatusUpdate()` → `add_status_update()`.
+    cd spinelli_kia
+    python -m pip install -r requirements.txt      # installs Django 5.2
+    python manage.py runserver
+
+Then open **http://127.0.0.1:8000** in a browser. The demo data is created automatically the
+first time. To start again from the original data, use **Switches and reset → Reset demo data**
+in the dark bar at the bottom of every page (do this before the presentation).
+
+| Who | How to sign in |
+|---|---|
+| Customer | Sign In (top right): `marie.tremblay@mail.com`, password `spinelli` (every demo customer uses `spinelli`) |
+| Receptionist, sales managers, admin | Staff portal (bottom right) and choose Sam Lee, Jordan Roy, Nadia Haddad or Ana Costa |
+
+## What each use case can do
+
+| Use case | Where | Normal flow | Error and alternate flows you can show |
+|---|---|---|---|
+| UC1 Create and manage profiles | Staff → Customers | Search, open a profile, edit and save (history line added), create a customer | No matching customer (3a), possible duplicate warning (3b), validation errors (6a) |
+| UC2 Scheduling | Staff → Schedule; Sales manager → Schedule | Book and confirm an appointment (confirmation + reminder), move it, cancel it, complete it | Slot taken or blocked (S-1a); manager blocks a period of unavailability (S-3) |
+| UC3 Automation and reporting | Admin → Automation Rules | Create a rule, Run now: report generated and emailed to the sales manager | No data available (alternate 1), rule without a sales manager: generation error (alternate 2) |
+| UC4 Test drive booking | Customer → Book a Test Drive; Staff → Test Drive Requests | Request online, receptionist checks availability and license, confirms (email + reminder) | Form errors, CRM offline (Figure 16), existing customer (Figure 14), invalid license: deny with a reason (Figure 15), vehicle not available, plate and completion |
+| UC5 Tracking | Customer → Track my Purchase; Sales manager → My Customers | Manager records a new stage, customer is notified and sees it | Status unavailable (A-1): sign in as `olivier.martin@mail.com` |
+| UC6 Messaging | Customer → Messages; Staff → Messages | Send, receptionist notified, reads, replies, customer notified, reads, ends the conversation | Empty fields, message not delivered (5a/8a, switch the reception inbox off), escalation to a sales manager (6a) |
+| UC7 Customer service | Customer → Contact Us; Staff → Messages → Service requests | Submit a request, receptionist assigns, resolves and closes it | Missing information (A-1), invalid information (A-2) |
+
+The **Prototype demo tools** page (bottom bar) has two switches to show the exceptional flows
+(CRM offline, reception inbox inactive) and lists every email/SMS notification the system sent.
+
+## How it is built (Milestone 7 layers)
+
+| Layer | Files |
+|---|---|
+| HCI layer (web pages, EN/FR) | `portal/` (Django views, templates, CSS) – the Milestone 6 screens |
+| Problem-domain layer | `models.py` – the 14 classes and their methods from Milestone 5 (unchanged from Prototype 2, except the report text) |
+| Data management layer | `store.py` (saves and loads the objects), `db.py`, `schema.sql` (SQLite here, PostgreSQL in the final system) |
+| Demo data | `seed.py` – the Milestone 6 example data (Marie Tremblay, 2026 Kia Sportage EX, request TD-1042...) |
+
+Django only provides the web pages; the objects are our own classes, saved by our own data layer.
+Change from Prototype 2: `booking.customer_id` may be empty, for a sales manager's blocked period (UC2 S-3).
+
+## Tests
+
+    python manage.py test portal            # 26 end-to-end tests: every page and every flow above
+    python -m unittest test_methods         # 31 tests of the methods (Prototype 2)
+    python main.py                          # console demo of the seven use cases (separate database)
 
 ## Team 23
 | Member | Use case |
@@ -45,15 +65,9 @@ Names use Python's snake_case: `personID` → `person_id`, `addStatusUpdate()` �
 | Mohammed Altheni | UC6 Messaging system |
 | Abd-Al Karim Taylouni | UC7 Customer service system |
 
-Branch workflow: one branch per change, merged into `main` by pull request.
-
 ## Project progress
 | Deliverable | Status | Where |
 |---|---|---|
 | Prototype 1 – classes, attributes, database | Submitted | `main` history |
-| Prototype 2 – all methods implemented | Done, due Nov 22 | Release / tag `Prototype_2` |
-| Milestone 5 – implementation class diagram, method contracts and specifications | Done, due Nov 22 | Course documents |
-| Final prototype | Next | `main` |
-
-`docs/` holds the Milestone 3 class diagram and CRC cards used for Prototype 1. The current design is
-the Milestone 5 implementation class diagram, which `models.py` follows.
+| Prototype 2 – all methods implemented | Submitted | Release / tag `Prototype_2` |
+| Final prototype – working web application | Done | Tag `Final_Prototype` |

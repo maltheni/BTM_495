@@ -697,8 +697,8 @@ class Report:
             stages = {}
             for c in customers:
                 stages[c.get_current_stage()] = stages.get(c.get_current_stage(), 0) + 1
-            self.content = (f"{len(customers)} new customer(s), {len(appointments)} appointment(s); "
-                             f"stages: {stages}")
+            self.content = (f"{len(customers)} new customer(s), {len(appointments)} appointment(s); stages: "
+                            + ", ".join(f"{k} {v}" for k, v in stages.items()))
         self.generated_date = date.today()
 
     def email_to_manager(self) -> None:

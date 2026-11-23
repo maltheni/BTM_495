@@ -1,4 +1,4 @@
-"""Prototype 2 demo: walks through the seven use cases with the implemented methods,
+"""Console demo (from Prototype 2): walks through the seven use cases with the implemented methods,
 then saves the objects in the SQLite database and reads them back.
 
 Run:  python main.py
@@ -7,6 +7,10 @@ from datetime import datetime, timedelta
 
 import db
 import models
+
+# the console demo uses its own database file, so it never touches the web prototype's data
+db.DB_PATH = db.DB_PATH.with_name("console_demo.db")
+
 from models import (Admin, AutomationRule, Conversation, Customer, DealerPlate, Message, Receptionist,
                     SalesAppointment, SalesManager, ServiceRequest, TestDrive, Vehicle)
 

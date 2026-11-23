@@ -1,0 +1,9 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "My Customers" %}{% endblock %}
+{% block content %}
+<h1>{% t "My Customers" %}</h1><div class="sub">{% t "Customers assigned to you. Open one to record a new status; the customer sees it in Track my Purchase." %}</div>
+<div class="card"><table><tr><th>{% t "Name" %}</th><th>{% t "Vehicle interest" %}</th><th>{% t "Current stage" %}</th><th>{% t "Last update" %}</th><th>{% t "Consent" %}</th><th></th></tr>
+{% for c in rows %}<tr><td><b>{{ c.name }}</b><div class="muted">{{ c.person_id }}</div></td><td>{{ c.vehicle_interest }}</td><td>{{ c.get_current_stage|pill }}</td>
+<td>{% if c.status_updates %}{{ c.status_updates|last|attr_date }}{% else %}-{% endif %}</td><td>{% if c.messaging_consent %}{% t "Yes" %}{% else %}{% t "No" %}{% endif %}</td><td><a class="btn sec sm" href="/manager/customers/{{ c.person_id }}/">{% t "Open" %}</a></td></tr>
+{% empty %}<tr><td colspan="6" class="muted">{% t "No customers assigned." %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

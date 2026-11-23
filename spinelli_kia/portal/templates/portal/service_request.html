@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ r.request_id }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/staff/messages/?tab=requests">{% t "Service requests" %}</a> / {{ r.request_id }}</div>
+<h1>{{ r.subject }} {{ r.status|pill }}</h1><div class="sub">{{ r.request_id }} · <a href="/staff/customers/{{ r.customer.person_id }}/">{{ r.customer.name }}</a> · {{ r.customer.phone_number }} · {% t "sent" %} {{ r.created_date|day }}</div>
+{% if error %}<div class="ban bad"><b>{% t "This action was not done" %}</b>{{ error }}</div>{% endif %}
+<div class="card"><div class="lbl">{% t "Description" %}</div>{{ r.description }}</div>
+{% if r.resolution %}<div class="card"><div class="lbl">{% t "Resolution" %}</div>{{ r.resolution }}</div>{% endif %}
+<div class="card grey">
+{% if r.status == "Open" %}<form method="post">{% csrf_token %}<button class="btn" name="action" value="assign">{% t "Assign to me" %}</button></form>
+{% elif r.status == "In progress" %}<form method="post">{% csrf_token %}<div class="f{% if error %} err{% endif %}"><label>{% t "How was it resolved?" %}</label><textarea name="resolution"></textarea></div><button class="btn" name="action" value="resolve">{% t "Mark resolved" %}</button></form>
+{% elif r.status == "Resolved" %}<form method="post">{% csrf_token %}<button class="btn" name="action" value="close">{% t "Close request" %}</button> <span class="muted">{% t "Close it once the customer confirms." %}</span></form>
+{% else %}<span class="muted">{% t "This request is closed." %}</span>{% endif %}
+</div>
+{% endblock %}

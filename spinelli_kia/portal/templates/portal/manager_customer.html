@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ c.name }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/manager/customers/">{% t "My Customers" %}</a> / {{ c.name }}</div>
+<h1>{{ c.name }}</h1><div class="sub">{% t "Customer" %} {{ c.person_id }} · {% t "customer since" %} {{ c.created_date|day }}</div>
+<form method="post" class="card grey" novalidate>{% csrf_token %}<h2>{% t "Update the status" %}</h2>
+{% if error %}<div class="ban bad"><b>{% t "The status was not updated" %}</b>{{ error }}</div>{% endif %}
+<div class="row" style="align-items:flex-end"><div class="f{% if error and not d.stage %} err{% endif %}" style="flex:1"><label>{% t "New stage" %}</label><select name="stage"><option value="">{% t "Choose a stage" %}</option>{% for s in stages %}<option{% if d.stage == s %} selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+<div class="f{% if error and d.stage and not d.note %} err{% endif %}" style="flex:3"><label>{% t "Note for the history" %}</label><input type="text" name="note" value="{{ d.note }}" placeholder="{% t 'For example: offer accepted, financing approved' %}"></div>
+<div class="f" style="flex:0"><button class="btn">{% t "Save and notify" %}</button></div></div>
+<div class="hint">{% if c.messaging_consent %}{% t "The customer agreed to messages: they will get an email." %}{% else %}{% t "The customer did not agree to messages: no email is sent, call them instead." %}{% endif %}</div></form>
+{% include "portal/_profile_body.html" %}
+{% endblock %}

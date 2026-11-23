@@ -1,0 +1,9 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Staff sign-in" %}{% endblock %}
+{% block content %}
+<div style="max-width:620px;margin:10px auto">
+<h1>{% t "Staff sign-in" %}</h1><div class="sub">{% t "Choose your account. In the final system staff sign in with their Microsoft account and multi-factor authentication (Milestone 7)." %}</div>
+<form method="post" class="card">{% csrf_token %}<table><tr><th>{% t "Name" %}</th><th>{% t "Role" %}</th><th>{% t "Email" %}</th><th></th></tr>
+{% for role, p in staff %}<tr><td><b>{{ p.name }}</b></td><td>{% t role %}</td><td class="muted">{{ p.email }}</td><td><button class="btn sm" name="person" value="{{ p.person_id }}">{% t "Sign In" %}</button></td></tr>{% endfor %}</table></form>
+</div>
+{% endblock %}

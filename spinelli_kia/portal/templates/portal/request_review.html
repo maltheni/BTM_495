@@ -1,0 +1,47 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ t.booking_id }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/staff/requests/">{% t "Test Drive Requests" %}</a> / {{ t.booking_id }}</div>
+<h1>{% t "Request" %} {{ t.booking_id }} {{ label|pill }}</h1><div class="sub">{% t "Received" %} {{ t.created_date|day }}{% if t.receptionist %} · {% t "Handled by" %} {{ t.receptionist.name }}{% endif %}</div>
+{% if error %}<div class="ban bad"><b>{% t "This action was not done" %}</b>{{ error }}</div>{% endif %}
+<div class="cols"><div>
+<div class="card"><h2>{% t "Customer" %}</h2><div class="kv"><b>{% t "Name" %}</b><span><a href="/staff/customers/{{ t.customer.person_id }}/">{{ t.customer.name }}</a> ({{ t.customer.person_id }})</span>
+<b>{% t "Email" %}</b><span>{{ t.customer.email }}</span><b>{% t "Phone" %}</b><span>{{ t.customer.phone_number }}</span>
+<b>{% t "Driver's license" %}</b><span><b style="color:#1f2933;font-size:13px">{{ t.driver_license_number }}</b></span>
+<b>{% t "Consent" %}</b><span>{% if t.customer.messaging_consent %}{% t "Email and SMS" %}{% else %}{% t "No messages: call the customer" %}{% endif %}</span></div></div>
+<div class="card"><h2>{% t "Customer history" %}</h2>{% for s in history %}<div style="margin-bottom:6px">{{ s.stage|pill }} <span class="muted">{{ s.updated_date|day }}</span> {{ s.note }}</div>{% empty %}<div class="muted">{% t "New customer: no history." %}</div>{% endfor %}
+{% if others %}<div class="muted" style="margin-top:8px">{% t "Other test drives" %}: {% for o in others %}{{ o.booking_id }} ({{ o.status }}){% if not forloop.last %}, {% endif %}{% endfor %}</div>{% endif %}</div>
+</div><div>
+<div class="card"><h2>{% t "Vehicle and time" %}</h2><div class="kv"><b>{% t "Vehicle" %}</b><span>{{ car }}</span><b>{% t "Stock" %}</b><span>#{{ t.vehicle.stock_number }}</span>
+<b>{% t "Requested" %}</b><span>{{ t.scheduled_date_time|when }}</span>
+<b>{% t "Availability" %}</b><span>{% if available %}<span class="pill p-Confirmed">{% t "Available" %}</span>{% elif available == False %}<span class="pill p-Denied">{% t "Not available at that time" %}</span>{% else %}-{% endif %}</span>
+{% if t.plate %}<b>{% t "Dealer plate" %}</b><span>{{ t.plate.plate_number }} ({{ t.plate.status }})</span>{% endif %}
+{% if t.return_time %}<b>{% t "Returned" %}</b><span>{{ t.return_time|when }}</span>{% endif %}</div></div>
+{% if t.status == "Booked" %}
+<form method="post" class="card grey">{% csrf_token %}
+<label class="chk"><input type="checkbox" name="license_ok" id="lic" onchange="document.getElementById('cf').disabled=!(this.checked && {{ available|yesno:'true,false' }})"><span>{% t "License verified: the number is valid and not expired" %}</span></label>
+<div class="btns"><button class="btn" id="cf" name="action" value="confirm" disabled>{% t "Confirm Test Drive" %}</button>
+<a class="btn red" href="?deny=1">{% t "Deny Request" %}</a><a class="btn sec" href="/staff/requests/">{% t "Back to queue" %}</a></div>
+{% if not available %}<div class="em">{% t "Confirm is disabled: the vehicle is not available at the requested time. Deny the request or move it." %}</div>{% endif %}</form>
+{% endif %}
+{% if t.status == "Confirmed" or t.status == "Rescheduled" %}
+<div class="card grey"><h2>{% t "On the day of the test drive" %}</h2>
+{% if not t.plate or t.plate.status != "Assigned" %}<form method="post" class="btns" style="margin-bottom:10px">{% csrf_token %}<select name="plate" style="width:auto"><option value="">{% t "Dealer plate" %}</option>{% for p in plates %}<option value="{{ p.plate_number }}">{{ p.plate_number }}</option>{% endfor %}</select><button class="btn sec" name="action" value="plate">{% t "Give out plate" %}</button></form>{% endif %}
+<form method="post" class="btns">{% csrf_token %}<button class="btn" name="action" value="complete">{% t "Car returned: mark completed" %}</button></form>
+{% if not started %}<div class="hint">{% t "A test drive can only be completed after it starts." %}</div>{% endif %}
+<h2 style="margin-top:14px">{% t "Move the test drive" %}</h2>
+<form method="post" class="row" style="align-items:flex-end">{% csrf_token %}<div class="f"><label>{% t "New date" %}</label><input type="date" name="date"></div><div class="f"><label>{% t "Time" %}</label><input type="time" name="time" value="12:00"></div><div class="f"><button class="btn sec" name="action" value="reschedule">{% t "Move" %}</button></div></form>
+<form method="post" action="/staff/requests/{{ t.booking_id }}/deny/" onsubmit="return confirm('Cancel this test drive and notify the customer?')">{% csrf_token %}<input type="hidden" name="reason" value="Other"><input type="hidden" name="note" value="The test drive was cancelled by the dealership."><button class="btn red sm">{% t "Cancel test drive" %}</button></form>
+</div>{% endif %}
+</div></div>
+<h2>{% t "Messages about this test drive" %}</h2>
+<div class="card"><table><tr><th>{% t "Message" %}</th><th>{% t "Type" %}</th><th>{% t "Status" %}</th><th>{% t "When" %}</th></tr>
+{% for m in t.messages %}<tr><td><b>{{ m.title }}</b><div class="muted">{{ m.content|truncatechars:90 }}</div></td><td>{{ m.message_type }}</td><td>{{ m.status|pill }}</td><td>{% if m.status == "Scheduled" %}{{ m.scheduled_date_time|when }}{% else %}{{ m.sent_date_time|when }}{% endif %}</td></tr>
+{% empty %}<tr><td colspan="4" class="muted">{% t "No messages yet." %}</td></tr>{% endfor %}</table></div>
+{% if deny %}<div class="overlay"><form method="post" action="/staff/requests/{{ t.booking_id }}/deny/" class="modal">{% csrf_token %}
+<h2>{% t "Deny request" %} {{ t.booking_id }}</h2><div class="sub">{{ t.customer.name }} · {{ car }} · {{ t.scheduled_date_time|when }}</div>
+<div class="f"><label>{% t "Reason" %}</label><select name="reason"><option value="">{% t "Choose a reason" %}</option>{% for r in reasons %}<option>{{ r }}</option>{% endfor %}</select></div>
+<div class="f"><label>{% t "Note to the customer (optional)" %}</label><textarea name="note" placeholder="{% t 'For example: the license number does not match the SAAQ record.' %}"></textarea></div>
+<div class="ban warn"><b>{% t "The customer will be told by email" %}</b>{% t "This cannot be undone: the customer must send a new request." %}</div>
+<div class="btns"><button class="btn redf">{% t "Deny and Notify Customer" %}</button><a class="btn sec" href="/staff/requests/{{ t.booking_id }}/">{% t "Cancel" %}</a></div></form></div>{% endif %}
+{% endblock %}

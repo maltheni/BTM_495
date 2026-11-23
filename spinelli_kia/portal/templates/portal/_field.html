@@ -1,0 +1,5 @@
+<div class="f{% if error %} err{% endif %}"><label for="f_{{ name }}">{{ label }}</label>
+{% if kind == "textarea" %}<textarea id="f_{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}" {{ attrs|safe }}>{{ value }}</textarea>
+{% elif kind == "select" %}<select id="f_{{ name }}" name="{{ name }}" {{ attrs|safe }}>{% for v, l in opts %}<option value="{{ v }}"{% if v == value %} selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+{% else %}<input id="f_{{ name }}" type="{{ kind }}" name="{{ name }}" value="{{ value }}" placeholder="{{ placeholder }}" {{ attrs|safe }}>{% endif %}
+{% if error %}<div class="em">{{ error }}</div>{% elif hint %}<div class="hint">{{ hint }}</div>{% endif %}</div>

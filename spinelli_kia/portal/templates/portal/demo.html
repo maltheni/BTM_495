@@ -1,0 +1,13 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Prototype demo tools" %}{% endblock %}
+{% block content %}
+<h1>{% t "Prototype demo tools" %}</h1><div class="sub">{% t "Not part of the system: these switches let us show the error and exceptional flows during the presentation." %}</div>
+<div class="row"><form method="post" class="card">{% csrf_token %}<h2>{% t "Simulate problems" %}</h2>
+<div class="split" style="margin-bottom:10px"><div><b>{% t "CRM connection" %}</b><div class="muted">{% t "Offline: test drive requests show the service unavailable banner (M4 Figure 16)." %}</div></div><button class="btn {% if demo.crm_online %}sec{% else %}redf{% endif %} sm" name="action" value="crm_online">{% if demo.crm_online %}{% t "Online: switch off" %}{% else %}{% t "Offline: switch on" %}{% endif %}</button></div>
+<div class="split"><div><b>{% t "Reception inbox" %}</b><div class="muted">{% t "Inactive: new customer messages cannot be delivered (M4 Figure 23)." %}</div></div><button class="btn {% if demo.reception_active %}sec{% else %}redf{% endif %} sm" name="action" value="reception_active">{% if demo.reception_active %}{% t "Active: switch off" %}{% else %}{% t "Inactive: switch on" %}{% endif %}</button></div></form>
+<form method="post" class="card">{% csrf_token %}<h2>{% t "Start again" %}</h2><div class="muted" style="margin-bottom:10px">{% t "Put back the starting data (Marie Tremblay, request TD-1042...). Do this before the presentation." %}</div>
+<button class="btn red" name="action" value="reset" onclick="return confirm('Reset all demo data?')">{% t "Reset demo data" %}</button></form></div>
+<div class="split"><h2>{% t "Notifications sent" %} ({{ notes|length }})</h2>{% if notes %}<form method="post">{% csrf_token %}<button class="btn sec sm" name="action" value="clear">{% t "Clear list" %}</button></form>{% endif %}</div>
+<div class="muted" style="margin-bottom:10px">{% t "In the final system these go out by email and SMS through Azure Communication Services (Milestone 7). Here they are listed, newest first." %}</div>
+{% for who, text in notes %}<div class="mail"><div class="mailh"><b>{% t "To" %}:</b> {{ who }}</div><div class="mailb">{{ text }}</div></div>{% empty %}<div class="card muted">{% t "No notifications sent since the server started." %}</div>{% endfor %}
+{% endblock %}

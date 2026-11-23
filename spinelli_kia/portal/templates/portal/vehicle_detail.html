@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ name }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/">{% t "Home" %}</a> / <a href="/vehicles/">{% t "Vehicles" %}</a> / {{ v.model }}</div>
+<div class="cols"><div>{% include "portal/_car.html" %}<div style="height:12px"></div>
+<div class="card"><h2>{% t "Specifications" %}</h2><div class="kv"><b>{% t "Body" %}</b><span>{{ info.body }}</span><b>{% t "Engine" %}</b><span>{{ info.engine }}</span><b>{% t "Colour" %}</b><span>{{ info.colour }}</span><b>VIN</b><span>{{ v.vin }}</span></div></div></div>
+<div><h1>{{ name }}</h1><div class="sub">{% t "Stock" %} #{{ v.stock_number }} · {% t "New" %}</div><div class="price" style="font-size:28px;margin-bottom:14px">{{ info.price|money }}</div>
+<div class="card grey"><b>{% t "Want to drive it?" %}</b><div class="muted" style="margin:4px 0 10px">{% t "Request a test drive. The reception team confirms it by email and SMS." %}</div>
+<a class="btn" href="/test-drive/?vehicle={{ v.stock_number }}">{% t "Book a Test Drive" %}</a></div>
+<a class="btn sec" href="/vehicles/">{% t "Back to Vehicles" %}</a></div></div>
+{% endblock %}

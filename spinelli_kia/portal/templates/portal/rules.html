@@ -1,0 +1,16 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Automation Rules" %}{% endblock %}
+{% block content %}
+<h1>{% t "Automation Rules" %}</h1><div class="sub">{% t "Each rule produces a report at its frequency and emails it to a sales manager." %}</div>
+<div class="cols"><div class="card"><table><tr><th>{% t "Rule" %}</th><th>{% t "Frequency" %}</th><th>{% t "Filter" %}</th><th>{% t "Sent to" %}</th><th>{% t "Status" %}</th><th></th></tr>
+{% for r in rules %}<tr><td><b>{{ r.name }}</b><div class="muted">{{ r.rule_id }} · {{ r.reports|length }} {% t "report(s)" %}</div></td><td>{{ r.frequency }}</td><td>{{ r.filters|default:"-" }}</td><td>{{ r.sales_manager.name|default:"-" }}</td>
+<td>{% if r.is_active %}{{ "Active"|pill }}{% else %}{{ "Inactive"|pill }}{% endif %}</td>
+<td><form method="post" class="btns">{% csrf_token %}<input type="hidden" name="id" value="{{ r.rule_id }}"><button class="btn sm" name="action" value="run">{% t "Run now" %}</button>{% if r.is_active %}<button class="btn sec sm" name="action" value="deactivate">{% t "Pause" %}</button>{% else %}<button class="btn sec sm" name="action" value="activate">{% t "Activate" %}</button>{% endif %}</form></td></tr>{% endfor %}</table></div>
+<form method="post" novalidate class="card">{% csrf_token %}<h2>{% t "New rule" %}</h2>
+{% if errors %}<div class="ban bad"><b>{% t "The rule was not created" %}</b>{% t "Fix the highlighted fields." %}</div>{% endif %}
+{% field "Name" "name" placeholder="For example: Weekly phone leads" %}
+{% field "Frequency" "frequency" "select" options=freq %}
+{% field "Lead source" "source" "select" options=sources %}
+<div class="f{% if errors.manager %} err{% endif %}"><label>{% t "Send the report to" %}</label><select name="manager"><option value="">{% t "No sales manager yet" %}</option>{% for m in managers %}<option value="{{ m.person_id }}"{% if d.manager == m.person_id %} selected{% endif %}>{{ m.name }}</option>{% endfor %}</select>{% if errors.manager %}<div class="em">{{ errors.manager }}</div>{% endif %}</div>
+<button class="btn" name="action" value="create">{% t "Create rule" %}</button></form></div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{{ conv.subject }}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/manager/messages/">{% t "Messages" %}</a> / {{ conv.subject }}</div>
+<h1>{{ conv.subject }} {{ conv.status|pill }}</h1><div class="sub">{{ conv.customer.name }} · {{ conv.customer.phone_number }} · {{ conv.customer.email }}</div>
+{% include "portal/_thread.html" %}
+{% if conv.status != "Closed" %}<form method="post" class="card grey">{% csrf_token %}<div class="muted" style="margin-bottom:8px">{% t "Contact the customer by phone or in person, then close the conversation." %}</div><button class="btn" name="action" value="close">{% t "Concern handled: close conversation" %}</button></form>{% endif %}
+{% endblock %}

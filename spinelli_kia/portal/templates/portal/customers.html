@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Customers" %}{% endblock %}
+{% block content %}
+<div class="split"><div><h1>{% t "Customers" %}</h1><div class="sub">{% t "Search by name, phone or email before creating a new profile." %}</div></div>
+<a class="btn" href="/staff/customers/new/{% if q %}?q={{ q|urlencode }}{% endif %}">{% t "New Customer" %}</a></div>
+<form class="row" method="get" style="align-items:flex-end;max-width:640px"><div class="f" style="flex:3"><label>{% t "Search" %}</label><input type="text" name="q" value="{{ q }}" placeholder="{% t 'Name, phone or email' %}" autofocus></div><div class="f" style="flex:0"><button class="btn">{% t "Search" %}</button></div>{% if q %}<div class="f" style="flex:0"><a class="btn sec" href="/staff/customers/">{% t "Clear" %}</a></div>{% endif %}</form>
+{% if q and not rows %}<div class="ban warn"><b>{% t "No matching customer" %}</b>{% t "No profile matches" %} "{{ q }}". {% t "Check the spelling, or create a new profile." %} <a href="/staff/customers/new/?q={{ q|urlencode }}">{% t "New Customer" %} →</a></div>{% endif %}
+<div class="card"><table><tr><th>{% t "Name" %}</th><th>{% t "Phone" %}</th><th>{% t "Email" %}</th><th>{% t "Vehicle interest" %}</th><th>{% t "Current stage" %}</th><th>{% t "Sales manager" %}</th><th></th></tr>
+{% for c in rows %}<tr><td><b>{{ c.name }}</b><div class="muted">{{ c.person_id }}</div></td><td>{{ c.phone_number }}</td><td>{{ c.email }}</td><td>{{ c.vehicle_interest }}</td>
+<td>{{ c.get_current_stage|pill }}</td><td>{{ c.assigned_to.name|default:"-" }}</td><td><a class="btn sec sm" href="/staff/customers/{{ c.person_id }}/">{% t "Open" %}</a></td></tr>{% endfor %}</table></div>
+{% endblock %}

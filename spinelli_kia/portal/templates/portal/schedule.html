@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Schedule" %}{% endblock %}
+{% block content %}
+<h1>{% t "Schedule" %}</h1><div class="sub">{% t "Sales managers' appointments for the week. Book, move or cancel an appointment for a customer." %}</div>
+<div class="cols"><div>{% with pick_manager=True staff_actions=True %}{% include "portal/_week.html" %}{% endwith %}</div>
+<div><form method="post" novalidate class="card">{% csrf_token %}<h2>{% t "Book an appointment" %}</h2>
+{% if errors %}<div class="ban bad"><b>{% t "The appointment was not booked" %}</b>{% t "Fix the highlighted fields." %}</div>{% endif %}
+<div class="f{% if errors.customer %} err{% endif %}"><label>{% t "Customer" %}</label><select name="customer"><option value="">{% t "Choose a customer" %}</option>{% for c in customers %}<option value="{{ c.person_id }}"{% if d.customer == c.person_id %} selected{% endif %}>{{ c.name }} ({{ c.person_id }})</option>{% endfor %}</select>{% if errors.customer %}<div class="em">{{ errors.customer }}</div>{% endif %}</div>
+<div class="f{% if errors.manager %} err{% endif %}"><label>{% t "Sales manager" %}</label><select name="manager">{% for m in managers %}<option value="{{ m.person_id }}"{% if m == mgr %} selected{% endif %}>{{ m.name }}</option>{% endfor %}</select></div>
+<div class="row"><div class="f{% if errors.when %} err{% endif %}"><label>{% t "Date" %}</label><input type="date" name="date" value="{{ d.date }}"></div><div class="f{% if errors.when %} err{% endif %}"><label>{% t "Time" %}</label><input type="time" name="time" value="{{ d.time }}" step="900"></div></div>
+{% if errors.when %}<div class="em" style="margin:-6px 0 10px">{{ errors.when }}</div>{% endif %}
+<div class="f"><label>{% t "Length" %}</label><select name="duration"><option value="30"{% if d.duration == "30" %} selected{% endif %}>30 min</option><option value="45"{% if d.duration == "45" %} selected{% endif %}>45 min</option><option value="60"{% if d.duration == "60" %} selected{% endif %}>60 min</option><option value="90"{% if d.duration == "90" %} selected{% endif %}>90 min</option></select></div>
+{% field "Purpose" "purpose" placeholder="For example: pricing and trade-in" %}
+<button class="btn" name="action" value="book">{% t "Book and confirm" %}</button><div class="hint">{% t "The system checks the manager is free, then sends the confirmation and schedules a reminder for the day before." %}</div></form></div></div>
+{% endblock %}

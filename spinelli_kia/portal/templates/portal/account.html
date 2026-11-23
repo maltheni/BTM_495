@@ -1,0 +1,10 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "My account" %}{% endblock %}
+{% block content %}
+<h1>{{ c.name }}</h1><div class="sub">{% t "Customer" %} {{ c.person_id }} · {% t "customer since" %} {{ c.created_date|day }}</div>
+<div class="card" style="max-width:560px"><div class="kv"><b>{% t "Email" %}</b><span>{{ c.email }}</span><b>{% t "Phone" %}</b><span>{{ c.phone_number }}</span>
+<b>{% t "Preferred language" %}</b><span>{{ c.preferred_language }}</span><b>{% t "Email and SMS" %}</b><span>{% if c.messaging_consent %}{% t "Yes, I agree to be contacted" %}{% else %}{% t "No messages" %}{% endif %}</span>
+<b>{% t "Sales manager" %}</b><span>{{ c.assigned_to.name|default:"-" }}</span></div></div>
+<div class="muted" style="margin-bottom:12px">{% t "To change these details, write to the reception team in Messages." %}</div>
+<a class="btn sec" href="/signout/">{% t "Sign Out" %}</a>
+{% endblock %}

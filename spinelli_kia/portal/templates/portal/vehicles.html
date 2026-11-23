@@ -1,0 +1,10 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Vehicles" %}{% endblock %}
+{% block content %}
+<div class="crumb"><a href="/">{% t "Home" %}</a> / {% t "Vehicles" %}</div>
+<h1>{% t "Vehicles in stock" %}</h1><div class="sub">{{ cars|length }} {% t "vehicles available for a test drive at Spinelli Kia West Island." %}</div>
+<div class="vgrid">{% for v in cars %}{% with info=cat|get:v.stock_number %}
+<div class="vcard">{% include "portal/_car.html" %}<div class="in"><b>{{ v.year }} {{ v.make }} {{ v.model }}</b><div class="muted">{{ info.body }} · {{ info.colour }} · {% t "Stock" %} #{{ v.stock_number }}</div>
+<div class="split" style="margin-top:8px"><span class="price">{{ info.price|money }}</span><a class="btn sm" href="/vehicles/{{ v.stock_number }}/">{% t "View details" %}</a></div></div></div>
+{% endwith %}{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% load portal_tags %}
+<div class="split" style="margin-bottom:10px"><form method="get" class="btns">{% if pick_manager %}<select name="manager" style="width:auto" onchange="this.form.submit()">{% for m in managers %}<option value="{{ m.person_id }}"{% if m == mgr %} selected{% endif %}>{{ m.name }} · {{ m.sales_team }}</option>{% endfor %}</select>{% endif %}<input type="hidden" name="from" value="{{ start|date:'Y-m-d' }}"></form>
+<div class="btns"><a class="btn sec sm" href="?manager={{ mgr.person_id }}&from={{ prev }}">← {% t "Previous week" %}</a><a class="btn sec sm" href="?manager={{ mgr.person_id }}">{% t "Today" %}</a><a class="btn sec sm" href="?manager={{ mgr.person_id }}&from={{ nextw }}">{% t "Next week" %} →</a></div></div>
+<div class="card"><table><tr><th style="width:150px">{% t "Day" %}</th><th>{% t "Appointments" %}</th></tr>
+{% for d, appts in by_day %}<tr><td><b>{{ d|date:"D M j" }}</b></td><td>{% for a in appts %}
+<div class="split" style="padding:6px 0;border-bottom:1px dashed #eef1f4"><div><b>{{ a.scheduled_date_time|date:"H:i" }}</b> · {{ a.duration_minutes }} min ·
+{% if a.customer %}{{ a.customer.name }} · {{ a.purpose }}{% else %}<span class="pill p-grey">{% t "Unavailable" %}</span> {% t "blocked period" %}{% endif %} {{ a.status|pill }}</div>
+{% if a.status != "Cancelled" and a.status != "Completed" %}<div class="btns">
+{% if staff_actions and a.customer %}
+<details><summary class="btn sec sm">{% t "Move" %}</summary><form method="post" class="btns" style="margin-top:6px">{% csrf_token %}<input type="hidden" name="id" value="{{ a.booking_id }}"><input type="hidden" name="from" value="{{ start|date:'Y-m-d' }}"><input type="date" name="date" style="width:auto"><input type="time" name="time" style="width:auto" value="{{ a.scheduled_date_time|date:'H:i' }}"><button class="btn sm" name="action" value="reschedule">{% t "Move" %}</button></form></details>
+<form method="post" class="inline">{% csrf_token %}<input type="hidden" name="id" value="{{ a.booking_id }}"><input type="hidden" name="from" value="{{ start|date:'Y-m-d' }}">{% if a.scheduled_date_time <= now %}<button class="btn sec sm" name="action" value="complete">{% t "Completed" %}</button>{% endif %}<button class="btn red sm" name="action" value="cancel" onclick="return confirm('Cancel this appointment and notify the customer?')">{% t "Cancel" %}</button></form>
+{% endif %}
+{% if manager_actions and not a.customer %}<form method="post" class="inline">{% csrf_token %}<input type="hidden" name="id" value="{{ a.booking_id }}"><button class="btn red sm" name="action" value="unblock">{% t "Remove" %}</button></form>{% endif %}
+</div>{% endif %}</div>
+{% empty %}<span class="muted">{% t "Free" %}</span>{% endfor %}</td></tr>{% endfor %}</table></div>

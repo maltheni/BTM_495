@@ -1,4 +1,4 @@
--- Spinelli Kia sales system - database schema (SQLite) - Prototype 2
+-- Spinelli Kia sales system - database schema (SQLite) - Final prototype
 -- One table per class in the class diagram. Subclasses share the parent's key.
 PRAGMA foreign_keys = ON;
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS dealer_plate (
 -- Booking (abstract) + its two subclasses
 CREATE TABLE IF NOT EXISTS booking (
     booking_id          TEXT PRIMARY KEY,
-    customer_id         TEXT NOT NULL REFERENCES customer(person_id),   -- makes
+    customer_id         TEXT REFERENCES customer(person_id),            -- makes (NULL for a sales manager's blocked period, UC2 S-3)
     receptionist_id     TEXT REFERENCES receptionist(person_id),        -- bookedBy (0..1)
     scheduled_date_time TEXT,
     duration_minutes    INTEGER,

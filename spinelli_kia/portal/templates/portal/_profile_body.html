@@ -1,0 +1,13 @@
+{% load portal_tags %}
+<div class="cols"><div>
+<div class="card"><h2>{% t "Contact details" %}</h2><div class="kv"><b>{% t "Email" %}</b><span>{{ c.email }}</span><b>{% t "Phone" %}</b><span>{{ c.phone_number }}</span>
+<b>{% t "Vehicle interest" %}</b><span>{{ c.vehicle_interest|default:"-" }}</span><b>{% t "Lead source" %}</b><span>{{ c.lead_source }}</span>
+<b>{% t "Preferred language" %}</b><span>{{ c.preferred_language }}</span><b>{% t "Sales manager" %}</b><span>{{ c.assigned_to.name|default:"-" }}</span>
+<b>{% t "Messaging consent" %}</b><span>{% if c.messaging_consent %}{% t "Yes: email and SMS allowed" %}{% else %}<span class="pill p-Denied">{% t "No: automatic email and SMS are off" %}</span>{% endif %}</span></div></div>
+<div class="card"><h2>{% t "Interaction history" %}</h2><table><tr><th>{% t "Date" %}</th><th>{% t "Stage" %}</th><th>{% t "Note" %}</th></tr>
+{% for s in history %}<tr><td>{{ s.updated_date|day }}</td><td>{{ s.stage|pill }}</td><td>{{ s.note }}</td></tr>{% empty %}<tr><td colspan="3" class="muted">{% t "No history yet." %}</td></tr>{% endfor %}</table></div>
+</div><div>
+<div class="card"><h2>{% t "Current stage" %}</h2>{{ c.get_current_stage|pill }}</div>
+<div class="card"><h2>{% t "Upcoming bookings" %}</h2>{% for b in upcoming %}<div style="margin-bottom:8px"><b>{{ b.booking_id }}</b> {{ b.status|pill }}<div class="muted">{{ b.scheduled_date_time|when }}{% if b.vehicle %} · {{ b.vehicle.model }}{% else %} · {{ b.purpose }}{% endif %}</div></div>{% empty %}<div class="muted">{% t "None" %}</div>{% endfor %}</div>
+<div class="card"><h2>{% t "Conversations" %}</h2>{% for v in c.conversations %}<div class="muted">{{ v.subject }} · {{ v.status }}</div>{% empty %}<div class="muted">{% t "None" %}</div>{% endfor %}</div>
+</div></div>

@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Schedule" %}{% endblock %}
+{% block content %}
+<h1>{% t "My schedule" %}</h1><div class="sub">{{ mgr.name }} · {{ mgr.sales_team }}</div>
+<div class="cols"><div>{% with manager_actions=True %}{% include "portal/_week.html" %}{% endwith %}</div>
+<div><form method="post" novalidate class="card">{% csrf_token %}<h2>{% t "Block a period" %}</h2><div class="muted" style="margin-bottom:10px">{% t "Record when you are unavailable (meeting, training, day off). Nobody can book you in that period." %}</div>
+{% if errors %}<div class="ban bad"><b>{% t "The period was not blocked" %}</b>{% for k, e in errors.items %}{{ e }} {% endfor %}</div>{% endif %}
+<div class="row"><div class="f{% if errors.when %} err{% endif %}"><label>{% t "Date" %}</label><input type="date" name="date" value="{{ d.date }}"></div><div class="f{% if errors.when %} err{% endif %}"><label>{% t "Start" %}</label><input type="time" name="time" value="{{ d.time }}"></div></div>
+<div class="f"><label>{% t "Length" %}</label><select name="hours">{% for h in "12348" %}<option value="{{ h }}"{% if d.hours == h %} selected{% endif %}>{{ h }} h</option>{% endfor %}</select></div>
+<button class="btn" name="action" value="block">{% t "Block period" %}</button></form></div></div>
+{% endblock %}

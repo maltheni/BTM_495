@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}{% load portal_tags %}
+{% block title %}{% t "Messages" %}{% endblock %}
+{% block content %}
+<div class="split"><div><h1>{% t "My messages" %}</h1><div class="sub">{% t "Write to the reception team. Answers usually arrive within one business day." %}</div></div>
+<a class="btn" href="/messages/new/">{% t "New Message" %}</a></div>
+<div class="card"><table><tr><th>{% t "Subject" %}</th><th>{% t "Last message" %}</th><th>{% t "Last activity" %}</th><th>{% t "Status" %}</th><th></th></tr>
+{% for conv, last, unread in rows %}<tr{% if unread %} class="unread"{% endif %}><td><b>{{ conv.subject }}</b>{% if unread %}<span class="badge">{{ unread }}</span>{% endif %}</td>
+<td class="muted">{% if last %}{% if last.sender_role == "Customer" %}{% t "You" %}{% elif last.sender_role == "System" %}Spinelli Kia{% else %}{{ conv.receptionist.name }}{% endif %}: {{ last.content|truncatechars:60 }}{% endif %}</td>
+<td>{{ conv.last_activity_date|day }}</td><td>{{ conv.status|pill }}</td><td><a class="btn sec sm" href="/messages/{{ conv.conversation_id }}/">{% t "Open" %}</a></td></tr>
+{% empty %}<tr><td colspan="5" class="muted">{% t "No messages yet. Select New Message to ask a question." %}</td></tr>{% endfor %}</table></div>
+{% endblock %}

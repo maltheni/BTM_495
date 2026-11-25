@@ -93,3 +93,5 @@ tr.unread{background:#f5f9ff}
 .right{margin-left:auto}
 .split{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 @media (max-width:760px){.cols{grid-template-columns:1fr}.top{overflow-x:auto}.page{padding:18px}}
+.car-photo{background-size:cover;background-position:center;background-repeat:no-repeat;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.cols .car-photo{height:300px}

@@ -1,1 +1,1 @@
-<div class="img" style="background:linear-gradient(135deg,hsl({{ info.hue|default:210 }},45%,32%),hsl({{ info.hue|default:210 }},55%,58%))">{{ v.year }} {{ v.make }} {{ v.model }}</div>
+{% load static %}<div class="img car-photo" style="background-image:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0) 45%),url('{% static 'portal/cars/' %}{{ v.stock_number }}.jpg'),linear-gradient(135deg,hsl({{ info.hue|default:210 }},45%,32%),hsl({{ info.hue|default:210 }},55%,58%))">{{ v.year }} {{ v.make }} {{ v.model }}</div>

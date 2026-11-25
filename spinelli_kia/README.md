@@ -56,6 +56,22 @@ Change from Prototype 2: `booking.customer_id` may be empty, for a sales manager
     python -m unittest test_methods         # 31 tests of the methods (Prototype 2)
     python main.py                          # console demo of the seven use cases (separate database)
 
+## Photo credits
+
+The vehicle photos come from Wikimedia Commons and are used under their free licences (author and licence on each file page).
+The model years may differ from the cars in the demo inventory.
+
+| Vehicle | Wikimedia Commons file |
+|---|---|
+| Sportage EX | [25 Kia Sportage EX.jpg](https://commons.wikimedia.org/wiki/File:25_Kia_Sportage_EX.jpg) |
+| Seltos EX | [2024 Kia Seltos EX, front right, 03-15-2026.jpg](https://commons.wikimedia.org/wiki/File:2024_Kia_Seltos_EX,_front_right,_03-15-2026.jpg) |
+| EV6 Wind | [22 Kia EV6 Wind.jpg](https://commons.wikimedia.org/wiki/File:22_Kia_EV6_Wind.jpg) |
+| Telluride SX | [24 Kia Telluride SX-Prestige.jpg](https://commons.wikimedia.org/wiki/File:24_Kia_Telluride_SX-Prestige.jpg) |
+| Sorento LX | [25 Kia Sorento LX.jpg](https://commons.wikimedia.org/wiki/File:25_Kia_Sorento_LX.jpg) |
+| Carnival EX | [2025 Kia Carnival Hybrid EX, front right, 10-12-2025.jpg](https://commons.wikimedia.org/wiki/File:2025_Kia_Carnival_Hybrid_EX,_front_right,_10-12-2025.jpg) |
+| K5 GT-Line | [2021 Kia K5 GT-Line, front left, 09-09-2023.jpg](https://commons.wikimedia.org/wiki/File:2021_Kia_K5_GT-Line,_front_left,_09-09-2023.jpg) |
+| Niro Hybrid EX | [2023 Kia Niro Hybrid EX in Runway Red, Front Right, 10-09-2023.jpg](https://commons.wikimedia.org/wiki/File:2023_Kia_Niro_Hybrid_EX_in_Runway_Red,_Front_Right,_10-09-2023.jpg) |
+
 ## Team 23
 | Member | Use case |
 |---|---|

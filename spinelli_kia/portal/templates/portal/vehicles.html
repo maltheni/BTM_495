@@ -7,4 +7,5 @@
 <div class="vcard">{% include "portal/_car.html" %}<div class="in"><b>{{ v.year }} {{ v.make }} {{ v.model }}</b><div class="muted">{{ info.body }} · {{ info.colour }} · {% t "Stock" %} #{{ v.stock_number }}</div>
 <div class="split" style="margin-top:8px"><span class="price">{{ info.price|money }}</span><a class="btn sm" href="/vehicles/{{ v.stock_number }}/">{% t "View details" %}</a></div></div></div>
 {% endwith %}{% endfor %}</div>
+<p class="muted" style="font-size:12px;margin-top:6px">{% t "Photos: Wikimedia Commons (free licences, see README for credits). Model years may differ from the cars in stock." %}</p>
 {% endblock %}

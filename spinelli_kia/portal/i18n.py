@@ -19,6 +19,7 @@ FR = {
         "Écrivez à notre équipe de réception depuis votre compte.", "Already bought or ordered?": "Déjà acheté ou commandé?",
     "See where your purchase is at any time.": "Voyez où en est votre achat en tout temps.", "Need help?": "Besoin d'aide?",
     "Send a service request and we will follow up.": "Envoyez une demande de service et nous ferons le suivi.",
+    "Photos: Wikimedia Commons (free licences, see README for credits). Model years may differ from the cars in stock.": "Photos : Wikimedia Commons (licences libres, crédits dans le README). L'année du modèle peut différer des véhicules en stock.",
     "Vehicles in stock": "Véhicules en stock", "vehicles available for a test drive at Spinelli Kia West Island.":
         "véhicules disponibles pour un essai chez Spinelli Kia Ouest-de-l'Île.", "Specifications": "Caractéristiques",
     "Body": "Carrosserie", "Engine": "Moteur", "Colour": "Couleur", "New": "Neuf", "Want to drive it?": "Envie de la conduire?",

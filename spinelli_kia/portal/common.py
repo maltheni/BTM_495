@@ -24,14 +24,14 @@ DEFAULT_SETTINGS = {"crm_online": True, "reception_active": True}
 
 # Website content shown next to the vehicles (not part of the problem domain, so not in the class diagram)
 CATALOGUE = {
-    "K260184": {"price": 34995, "body": "Compact SUV", "engine": "2.5 L, AWD", "colour": "Snow White Pearl", "hue": 205},
+    "K260184": {"price": 34995, "body": "Compact SUV", "engine": "2.5 L, AWD", "colour": "Ebony Black", "hue": 205},
     "K260211": {"price": 29495, "body": "Subcompact SUV", "engine": "2.0 L, AWD", "colour": "Pluton Blue", "hue": 220},
-    "K260157": {"price": 52995, "body": "Electric crossover", "engine": "Electric, 450 km range", "colour": "Yacht Blue", "hue": 195},
-    "K260302": {"price": 58995, "body": "3-row SUV", "engine": "3.8 L V6, AWD", "colour": "Wolf Grey", "hue": 230},
-    "K260245": {"price": 38995, "body": "Mid-size SUV", "engine": "2.5 L, AWD", "colour": "Gravity Grey", "hue": 210},
-    "K260090": {"price": 44995, "body": "Minivan", "engine": "3.5 L V6", "colour": "Astra Blue", "hue": 215},
+    "K260157": {"price": 52995, "body": "Electric crossover", "engine": "Electric, 450 km range", "colour": "Runway Red", "hue": 195},
+    "K260302": {"price": 58995, "body": "3-row SUV", "engine": "3.8 L V6, AWD", "colour": "Snow White Pearl", "hue": 230},
+    "K260245": {"price": 38995, "body": "Mid-size SUV", "engine": "2.5 L, AWD", "colour": "Ebony Black", "hue": 210},
+    "K260090": {"price": 44995, "body": "Minivan", "engine": "3.5 L V6", "colour": "Steel Grey", "hue": 215},
     "K260133": {"price": 36995, "body": "Sedan", "engine": "1.6 L turbo", "colour": "Wolf Grey", "hue": 0},
-    "U240512": {"price": 27995, "body": "Hybrid crossover", "engine": "1.6 L hybrid", "colour": "Cityscape Green", "hue": 140},
+    "U240512": {"price": 27995, "body": "Hybrid crossover", "engine": "1.6 L hybrid", "colour": "Runway Red", "hue": 140},
 }
 
 WINDOWS = {"Morning": (9, "9:00 to 12:00"), "Afternoon": (12, "12:00 to 17:00"), "Evening": (17, "17:00 to 20:00")}

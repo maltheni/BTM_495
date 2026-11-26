@@ -33,7 +33,7 @@ Online copy (same app, hosted on PythonAnywhere): **https://maltheni.pythonanywh
 | UC4 Test drive booking | Customer → Book a Test Drive; Staff → Test Drive Requests | Request online, receptionist checks availability and license, confirms (email + reminder) | Form errors, CRM offline (Figure 16), existing customer (Figure 14), invalid license: deny with a reason (Figure 15), vehicle not available, plate and completion |
 | UC5 Tracking | Customer → Track my Purchase; Sales manager → My Customers | Manager records a new stage, customer is notified and sees it | Status unavailable (A-1): sign in as `olivier.martin@mail.com` |
 | UC6 Messaging | Customer → Messages; Staff → Messages | Send, receptionist notified, reads, replies, customer notified, reads, ends the conversation | Empty fields, message not delivered (5a/8a, switch the reception inbox off), escalation to a sales manager (6a) |
-| UC7 Customer service | Customer → Contact Us; Staff → Messages → Service requests | Submit a request, receptionist assigns, resolves and closes it | Missing information (A-1), invalid information (A-2) |
+| UC7 Customer service | Customer → Contact Us; Staff → Messages → Service requests | Submit a request (signed in or not), receptionist assigns, resolves and closes it | Missing information (A-1), invalid information (A-2) |
 
 The **Prototype demo tools** page (bottom bar) has two switches to show the exceptional flows
 (CRM offline, reception inbox inactive) and lists every email/SMS notification the system sent.
@@ -52,7 +52,7 @@ Change from Prototype 2: `booking.customer_id` may be empty, for a sales manager
 
 ## Tests
 
-    python manage.py test portal            # 26 end-to-end tests: every page and every flow above
+    python manage.py test portal            # 27 end-to-end tests: every page and every flow above
     python -m unittest test_methods         # 31 tests of the methods (Prototype 2)
     python main.py                          # console demo of the seven use cases (separate database)
 

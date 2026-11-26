@@ -2,7 +2,7 @@
 {% block title %}{% t "Sign In" %}{% endblock %}
 {% block content %}
 <div style="max-width:440px;margin:20px auto">
-<h1>{% t "Sign in to your account" %}</h1><div class="sub">{% t "Your account gives you Messages, Track my Purchase and Contact Us. Booking a test drive does not need an account." %}</div>
+<h1>{% t "Sign in to your account" %}</h1><div class="sub">{% t "Your account gives you Messages and Track my Purchase. Booking a test drive or contacting us does not need an account." %}</div>
 {% if err %}<div class="ban bad"><b>{% t "You could not be signed in" %}</b>{{ err }}</div>{% endif %}
 <form method="post" class="card">{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">
 <div class="f"><label>{% t "Email" %}</label><input type="email" name="email" value="{{ email }}" placeholder="name@example.com" autofocus></div>

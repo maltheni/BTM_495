@@ -93,7 +93,7 @@ def need(role):
             r, user = current_user(request)
             if r != role:
                 if role == "customer":
-                    flash(request, "info", "Please sign in", "Messages, Track my Purchase and Contact Us need your customer account.")
+                    flash(request, "info", "Please sign in", "Messages and Track my Purchase need your customer account.")
                     return redirect(f"/signin/?next={request.path}")
                 return redirect("/staff/signin/")
             request.user_obj = user

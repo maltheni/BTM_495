@@ -247,30 +247,70 @@ def conversation(request, cid):
 
 
 # ------------------------------------------------------------------ UC7 contact us
-@need("customer")
 def contact(request):
-    c = request.user_obj
-    d, errors, invalid = {"subject": "", "description": ""}, {}, None
+    """UC7: anyone can send a service request. A signed-in customer's details are filled in; a visitor types them,
+    and the request is put on the matching customer profile (or a new one), like an online test drive request."""
+    role, me = current_user(request)
+    signed_in = role == "customer"
+    d = {"name": "", "email": "", "phone": "", "subject": "", "description": ""}
+    if signed_in:
+        d.update(name=me.name, email=me.email, phone=me.phone_number)
+    errors, invalid = {}, None
     if request.method == "POST":
         d = {k: request.POST.get(k, "").strip() for k in d}
-        req = ServiceRequest(request_id=models.new_id("SR-"), subject=d["subject"], description=d["description"], customer=c)
-        try:
-            req.submit()                                      # UC7: validates the form and records the request
-        except ValueError as e:
-            text = str(e)
-            if text.startswith("Missing"):                    # A-1 missing required information
-                if not d["subject"]:
-                    errors["subject"] = "Enter a subject."
-                if not d["description"]:
-                    errors["description"] = "Describe your request."
-            else:                                             # A-2 invalid information
-                errors["description"] = "Give a few more details (at least 10 characters)."
-                invalid = text
-        else:
-            world().service_requests[req.request_id] = req
-            commit()
-            flash(request, "ok", f"Request {req.request_id} received",
-                  "The reception team will contact you. You can follow its status below.")
-            return redirect("/contact/")
-    mine = sorted(c.service_requests, key=lambda r: r.created_date, reverse=True)
-    return page(request, "contact.html", "contact", d=d, errors=errors, invalid=invalid, mine=mine, n_errors=len(errors))
+        if signed_in:                                         # contact details come from the account
+            d.update(name=me.name, email=me.email, phone=me.phone_number)
+        else:                                                 # A-1 / A-2 for a visitor's contact details
+            for k, label in (("name", "full name"), ("email", "email"), ("phone", "phone number")):
+                if not d[k]:
+                    errors[k] = f"Enter your {label}."
+            if d["email"] and check_email(d["email"]):
+                errors["email"] = check_email(d["email"])
+                invalid = invalid or "email"
+            if d["phone"] and check_phone(d["phone"]):
+                errors["phone"] = check_phone(d["phone"])
+                invalid = invalid or "phone"
+        with LOCK:
+            w = world()
+            new_customer = None
+            if signed_in:
+                c = me
+            elif errors:
+                c = Customer(person_id="", name=d["name"])        # placeholder: nothing is saved
+            else:
+                c = next((x for x in w.customers.values() if x.email.lower() == d["email"].lower()), None)
+                if c is None:                                 # M4 Figure 14 rule: no duplicate profile
+                    c = new_customer = Customer(person_id=models.new_id("C-"), name=d["name"], email=d["email"],
+                                                phone_number=d["phone"], lead_source="online")
+            req = ServiceRequest(request_id=models.new_id("SR-"), subject=d["subject"], description=d["description"],
+                                 customer=c)
+            try:
+                req.submit()                                  # UC7: validates the form and records the request
+                if errors:                                    # the placeholder customer is thrown away
+                    c.service_requests.remove(req)
+            except ValueError as e:
+                text = str(e)
+                if text.startswith("Missing"):                # A-1 missing required information
+                    if not d["subject"]:
+                        errors["subject"] = "Enter a subject."
+                    if not d["description"]:
+                        errors["description"] = "Describe your request."
+                else:                                         # A-2 invalid information
+                    errors["description"] = "Give a few more details (at least 10 characters)."
+                    invalid = text
+            if not errors:
+                if new_customer:
+                    w.customers[new_customer.person_id] = new_customer
+                    new_customer.assign_to(min(w.managers.values(), key=lambda m: len(m.customers)))
+                w.service_requests[req.request_id] = req
+                commit()
+                if signed_in:
+                    flash(request, "ok", f"Request {req.request_id} received",
+                          "The reception team will contact you. You can follow its status below.")
+                else:
+                    flash(request, "ok", f"Request {req.request_id} received",
+                          "The reception team will contact you by email or phone. Sign in to follow its status.")
+                return redirect("/contact/")
+    mine = sorted(me.service_requests, key=lambda r: r.created_date, reverse=True) if signed_in else []
+    return page(request, "contact.html", "contact", d=d, errors=errors, invalid=invalid, mine=mine,
+                n_errors=len(errors), signed_in=signed_in)

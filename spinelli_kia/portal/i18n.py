@@ -22,14 +22,19 @@ FR = {
     "Photos: Wikimedia Commons (free licences, see README for credits). Model years may differ from the cars in stock.": "Photos : Wikimedia Commons (licences libres, crédits dans le README). L'année du modèle peut différer des véhicules en stock.",
     "Click to enlarge": "Cliquer pour agrandir",
     "Close": "Fermer",
+    "Sending as": "Envoyé par",
+    "to fill in your details automatically and follow your requests.": "pour remplir vos coordonnées automatiquement et suivre vos demandes.",
+    "Sign in": "Connectez-vous",
+    "Messages and Track my Purchase need your customer account.": "Les messages et le suivi de l'achat nécessitent votre compte client.",
+    "The reception team will contact you by email or phone. Sign in to follow its status.": "L'équipe de la réception vous contactera par courriel ou par téléphone. Connectez-vous pour suivre son statut.",
     "Vehicles in stock": "Véhicules en stock", "vehicles available for a test drive at Spinelli Kia West Island.":
         "véhicules disponibles pour un essai chez Spinelli Kia Ouest-de-l'Île.", "Specifications": "Caractéristiques",
     "Body": "Carrosserie", "Engine": "Moteur", "Colour": "Couleur", "New": "Neuf", "Want to drive it?": "Envie de la conduire?",
     "Request a test drive. The reception team confirms it by email and SMS.":
         "Demandez un essai routier. L'équipe de réception le confirme par courriel et texto.", "Back to Vehicles": "Retour aux véhicules",
     "Sign in to your account": "Connectez-vous à votre compte",
-    "Your account gives you Messages, Track my Purchase and Contact Us. Booking a test drive does not need an account.":
-        "Votre compte donne accès à Messages, Suivre mon achat et Nous joindre. Réserver un essai ne demande pas de compte.",
+    "Your account gives you Messages and Track my Purchase. Booking a test drive or contacting us does not need an account.":
+        "Votre compte donne accès à Messages et Suivre mon achat. Réserver un essai ou nous joindre ne demande pas de compte.",
     "You could not be signed in": "Connexion impossible", "Email": "Courriel", "Password": "Mot de passe", "Cancel": "Annuler",
     "Prototype demo account": "Compte de démonstration du prototype", "password": "mot de passe",
     "Every demo customer uses the password spinelli. The final system verifies the email address (Milestone 7, security).":

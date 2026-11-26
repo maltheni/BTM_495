@@ -4,12 +4,15 @@
 <h1>{% t "Contact Us" %}</h1><div class="sub">{% t "Send a service request: a question about your purchase, paperwork, a delivery or a problem. The reception team follows it until it is resolved." %}</div>
 {% if n_errors %}<div class="ban bad"><b>{% if invalid %}{% t "Some information is not valid" %}{% else %}{% t "Some required information is missing" %}{% endif %}</b>{% t "Fix the highlighted fields and send again." %}</div>{% endif %}
 <div class="cols"><form method="post" novalidate class="card">{% csrf_token %}
+{% if signed_in %}<div class="muted" style="margin-bottom:10px">{% t "Sending as" %} <b>{{ d.name }}</b> ({{ d.email }})</div>
+{% else %}{% field "Full name" "name" placeholder="First and last name" %}{% field "Email" "email" "email" placeholder="name@example.com" %}{% field "Phone" "phone" "tel" placeholder="(514) 555-0177" %}{% endif %}
 {% field "Subject" "subject" placeholder="For example: Paperwork for my purchase" %}
 {% field "Description" "description" "textarea" placeholder="Describe your request (at least 10 characters)" %}
 <div class="btns"><button class="btn">{% t "Send request" %}</button><a class="btn sec" href="/">{% t "Cancel" %}</a></div></form>
 <div class="card grey"><h2>{% t "Other ways to reach us" %}</h2><div class="kv"><b>{% t "Phone" %}</b><span>(514) 555-0100</span><b>{% t "Address" %}</b><span>4463 Boul. des Sources, Pierrefonds-Roxboro</span><b>{% t "Hours" %}</b><span>{% t "Mon to Fri 9:00 to 20:00, Sat 9:00 to 17:00" %}</span></div></div></div>
-<h2>{% t "My service requests" %}</h2>
+{% if signed_in %}<h2>{% t "My service requests" %}</h2>
 <div class="card"><table><tr><th>{% t "Number" %}</th><th>{% t "Subject" %}</th><th>{% t "Sent" %}</th><th>{% t "Status" %}</th><th>{% t "Resolution" %}</th></tr>
 {% for r in mine %}<tr><td>{{ r.request_id }}</td><td><b>{{ r.subject }}</b></td><td>{{ r.created_date|day }}</td><td>{{ r.status|pill }}</td><td class="muted">{{ r.resolution|default:"-" }}</td></tr>
 {% empty %}<tr><td colspan="5" class="muted">{% t "No requests yet." %}</td></tr>{% endfor %}</table></div>
+{% else %}<p class="muted"><a href="/signin/?next=/contact/">{% t "Sign in" %}</a> {% t "to fill in your details automatically and follow your requests." %}</p>{% endif %}
 {% endblock %}

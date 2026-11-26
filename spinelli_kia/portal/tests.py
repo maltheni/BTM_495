@@ -293,6 +293,34 @@ class UC7Service(Base):
         self.c.post(f"/staff/service/{rid}/", {"action": "close"})
         self.assertEqual(self.reloaded().service_requests[rid].status, "Closed")
 
+    def test_visitor_can_send_a_request_without_signing_in(self):
+        page = self.c.get("/contact/")
+        self.assertEqual(page.status_code, 200)
+        self.assertContains(page, 'name="email"')
+        before = len(self.reloaded().customers)
+        # A-1: contact details missing
+        self.assertContains(self.c.post("/contact/", {"subject": "Hours", "description": "Are you open on Sunday?"}),
+                            "Some required information is missing")
+        # A-2: invalid email
+        self.assertContains(self.c.post("/contact/", {"name": "Paul Roy", "email": "paul", "phone": "(514) 555-0199",
+                                                      "subject": "Hours", "description": "Are you open on Sunday?"}),
+                            "Some information is not valid")
+        self.assertEqual(len(self.reloaded().customers), before)          # nothing saved on an error
+        # new visitor: a profile is created and the request is on it
+        self.c.post("/contact/", {"name": "Paul Roy", "email": "paul.roy@mail.com", "phone": "(514) 555-0199",
+                                  "subject": "Hours", "description": "Are you open on Sunday?"})
+        w = self.reloaded()
+        self.assertEqual(len(w.customers), before + 1)
+        r = [r for r in w.service_requests.values() if r.subject == "Hours"][0]
+        self.assertEqual(r.customer.email, "paul.roy@mail.com")
+        # known email: no duplicate profile
+        self.c.post("/contact/", {"name": "Marie T", "email": "MARIE.TREMBLAY@mail.com", "phone": "(514) 555-0177",
+                                  "subject": "Winter tires", "description": "Can I book winter tires?"})
+        w = self.reloaded()
+        self.assertEqual(len(w.customers), before + 1)
+        r = [r for r in w.service_requests.values() if r.subject == "Winter tires"][0]
+        self.assertEqual(r.customer.person_id, "C-2041")
+
 
 class UC3Reports(Base):
     def setUp(self):

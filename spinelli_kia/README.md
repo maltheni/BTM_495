@@ -53,7 +53,7 @@ Change from Prototype 2: `booking.customer_id` may be empty, for a sales manager
 ## Tests
 
     python manage.py test portal            # 27 end-to-end tests: every page and every flow above
-    python -m unittest test_methods         # 31 tests of the methods (Prototype 2)
+    python -m unittest test_methods         # 32 tests of the methods (Prototype 2, plus Message.create)
     python main.py                          # console demo of the seven use cases (separate database)
 
 ## Photo credits

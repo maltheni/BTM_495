@@ -219,6 +219,12 @@ class UC6Messaging(unittest.TestCase):
         self.conv = Conversation(conversation_id="CV1", subject="Seltos pricing", customer=self.cust)
         self.conv.assign_to(self.rec)
 
+
+    def test_create_gives_a_new_composed_message(self):
+        m = Message.create("Confirmation", "Your test drive is confirmed.", message_type="Confirmation")
+        n = Message.create("Reminder", "See you tomorrow.")
+        self.assertEqual((m.title, m.content, m.status, m.message_type), ("Confirmation", "Your test drive is confirmed.", "Composed", "Confirmation"))
+        self.assertNotEqual(m.message_id, n.message_id)
     def test_normal_flow(self):
         inquiry = Message(message_id="MS1", conversation=self.conv, title="Question", content="Price of the Seltos?")
         self.assertTrue(inquiry.validate())

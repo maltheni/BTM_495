@@ -178,9 +178,8 @@ class Customer:
         self.status_updates.append(update)
         if self.messaging_consent:
             conv = _system_conversation(self, "Status updates")
-            notice = Message(message_id=new_id("MS"), conversation=conv, title="Status update",
-                    content=f"Your file is now at the stage: {stage}.", sender_role="System",
-                    message_type="Notification", channel="Email")
+            notice = Message.create("Status update", f"Your file is now at the stage: {stage}.", conversation=conv,
+                                    sender_role="System", message_type="Notification", channel="Email")
             try_send(notice)
 
     def get_current_stage(self) -> str:
@@ -265,8 +264,8 @@ def _system_conversation(customer: Customer, subject: str) -> Conversation:
 
 def _booking_message(booking, title: str, content: str, message_type: str) -> Message:
     conv = _booking_conversation(booking.customer, booking.receptionist)
-    msg = Message(message_id=new_id("MS"), conversation=conv, title=title, content=content,
-                  sender_role="System", message_type=message_type, channel="Email")
+    msg = Message.create(title, content, conversation=conv, sender_role="System", message_type=message_type,
+                         channel="Email")
     if isinstance(booking, SalesAppointment):
         msg.sales_appointment = booking
     else:
@@ -548,9 +547,8 @@ class Conversation:
         self.sales_manager, self.status = manager, "Escalated"
         if self not in manager.escalated_conversations:
             manager.escalated_conversations.append(self)
-        notice = Message(message_id=new_id("MS"), conversation=self, title="Conversation escalated",
-                         content=f"Escalated to {manager.name}.", sender_role="System",
-                         message_type="Notification")
+        notice = Message.create("Conversation escalated", f"Escalated to {manager.name}.", conversation=self,
+                                sender_role="System", message_type="Notification")
         notice.sent_date_time, notice.status = datetime.now(), "Sent"
         self.messages.append(notice)
         notify(manager, f"conversation escalated: {self.subject}")
@@ -577,6 +575,12 @@ class Message:
     def __post_init__(self):
         if self.sales_appointment is not None and self.test_drive is not None:
             raise ValueError("A message is about at most one booking")
+
+    @classmethod
+    def create(cls, title: str, content: str, **details) -> "Message":
+        """Message.create(title, content) of method contracts M1 and M2: a new message with its own ID,
+        status Composed. details sets the other attributes (conversation, messageType, channel...)."""
+        return cls(message_id=new_id("MS"), title=title, content=content, **details)
 
     def validate(self) -> bool:
         """Title and content filled in, and the customer agreed to be contacted."""
